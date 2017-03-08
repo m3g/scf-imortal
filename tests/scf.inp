@@ -1,0 +1,31 @@
+#
+# Arquivo de input do programa scf.x
+#
+
+# Declaracao de qual o arquivo xyz
+xyzfile ./data/water.xyz
+
+# Carga da molecula (inteiro)
+charge 0
+
+# Declaracao do arquivo da base
+basefile ./bases/STO-3G.dat
+
+# Declaracao pra ver se a base é contraida ou nao
+contract no
+
+# Nivel de impressao
+printlevel 0
+
+# Chute para a matriz de coeficientes inicial
+#guess zero
+guess CURRENT_water.xyz
+#guess feasible
+
+# Criterio para convergencia da energia
+ecrit 1.d-10
+
+# Número maximo de iteracoes de ponto-fixo
+maxitfix 300
+
+

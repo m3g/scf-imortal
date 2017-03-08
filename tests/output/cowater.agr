@@ -1,0 +1,1652 @@
+# Grace project file
+#
+@version 50107
+@page size 790, 610
+@page scroll 5%
+@page inout 5%
+@link page off
+@map font 0 to "Times-Roman", "Times-Roman"
+@map font 1 to "Times-Italic", "Times-Italic"
+@map font 2 to "Times-Bold", "Times-Bold"
+@map font 3 to "Times-BoldItalic", "Times-BoldItalic"
+@map font 4 to "Helvetica", "Helvetica"
+@map font 5 to "Helvetica-Oblique", "Helvetica-Oblique"
+@map font 6 to "Helvetica-Bold", "Helvetica-Bold"
+@map font 7 to "Helvetica-BoldOblique", "Helvetica-BoldOblique"
+@map font 8 to "Courier", "Courier"
+@map font 9 to "Courier-Oblique", "Courier-Oblique"
+@map font 10 to "Courier-Bold", "Courier-Bold"
+@map font 11 to "Courier-BoldOblique", "Courier-BoldOblique"
+@map font 12 to "Symbol", "Symbol"
+@map font 13 to "ZapfDingbats", "ZapfDingbats"
+@map color 0 to (255, 255, 255), "white"
+@map color 1 to (0, 0, 0), "black"
+@map color 2 to (255, 0, 0), "red"
+@map color 3 to (0, 255, 0), "green"
+@map color 4 to (0, 0, 255), "blue"
+@map color 5 to (255, 255, 0), "yellow"
+@map color 6 to (188, 143, 143), "brown"
+@map color 7 to (220, 220, 220), "grey"
+@map color 8 to (148, 0, 211), "violet"
+@map color 9 to (0, 255, 255), "cyan"
+@map color 10 to (255, 0, 255), "magenta"
+@map color 11 to (255, 165, 0), "orange"
+@map color 12 to (114, 33, 188), "indigo"
+@map color 13 to (103, 7, 72), "maroon"
+@map color 14 to (64, 224, 208), "turquoise"
+@map color 15 to (0, 139, 0), "green4"
+@reference date 0
+@date wrap off
+@date wrap year 1950
+@default linewidth 1.0
+@default linestyle 1
+@default color 1
+@default pattern 1
+@default font 0
+@default char size 1.000000
+@default symbol size 1.000000
+@default sformat "%16.8g"
+@background color 0
+@page background fill on
+@timestamp off
+@timestamp 0.03, 0.03
+@timestamp color 1
+@timestamp rot 0
+@timestamp font 0
+@timestamp char size 1.000000
+@timestamp def "Thu Mar 18 14:16:08 2004"
+@with string
+@    string on
+@    string loctype view
+@    string 0.730046009696, 0.569718017831
+@    string color 1
+@    string rot 0
+@    string font 0
+@    string just 0
+@    string char size 1.000000
+@    string def "Carbon monoxide (CO) - STO-3G"
+@with string
+@    string on
+@    string loctype view
+@    string 0.20961809978, 0.197486251394
+@    string color 1
+@    string rot 0
+@    string font 0
+@    string just 0
+@    string char size 1.000000
+@    string def "Distorted water molecule - STO-3G"
+@r0 off
+@link r0 to g0
+@r0 type above
+@r0 linestyle 1
+@r0 linewidth 1.0
+@r0 color 1
+@r0 line 0, 0, 0, 0
+@r1 off
+@link r1 to g0
+@r1 type above
+@r1 linestyle 1
+@r1 linewidth 1.0
+@r1 color 1
+@r1 line 0, 0, 0, 0
+@r2 off
+@link r2 to g0
+@r2 type above
+@r2 linestyle 1
+@r2 linewidth 1.0
+@r2 color 1
+@r2 line 0, 0, 0, 0
+@r3 off
+@link r3 to g0
+@r3 type above
+@r3 linestyle 1
+@r3 linewidth 1.0
+@r3 color 1
+@r3 line 0, 0, 0, 0
+@r4 off
+@link r4 to g0
+@r4 type above
+@r4 linestyle 1
+@r4 linewidth 1.0
+@r4 color 1
+@r4 line 0, 0, 0, 0
+@g0 on
+@g0 hidden false
+@g0 type XY
+@g0 stacked false
+@g0 bar hgap 0.000000
+@g0 fixedpoint off
+@g0 fixedpoint type 0
+@g0 fixedpoint xy 0.000000, 0.000000
+@g0 fixedpoint format general general
+@g0 fixedpoint prec 6, 6
+@with g0
+@    world xmin 0
+@    world xmax 300
+@    world ymin 1e-09
+@    world ymax 1000
+@    stack world 0, 0, 0, 0
+@    znorm 1
+@    view xmin 0.150000
+@    view xmax 1.143564
+@    view ymin 0.531818
+@    view ymax 0.850000
+@    title ""
+@    title font 0
+@    title size 1.500000
+@    title color 1
+@    subtitle "Current algorithm vs. Fixed-Point"
+@    subtitle font 0
+@    subtitle size 1.000000
+@    subtitle color 1
+@    xaxes scale Normal
+@    yaxes scale Logarithmic
+@    xaxes invert off
+@    yaxes invert off
+@    xaxis  on
+@    xaxis  type zero false
+@    xaxis  offset 0.000000 , 0.000000
+@    xaxis  bar on
+@    xaxis  bar color 1
+@    xaxis  bar linestyle 1
+@    xaxis  bar linewidth 1.0
+@    xaxis  label ""
+@    xaxis  label layout para
+@    xaxis  label place auto
+@    xaxis  label char size 1.000000
+@    xaxis  label font 0
+@    xaxis  label color 1
+@    xaxis  label place normal
+@    xaxis  tick on
+@    xaxis  tick major 50
+@    xaxis  tick minor ticks 1
+@    xaxis  tick default 6
+@    xaxis  tick place rounded true
+@    xaxis  tick in
+@    xaxis  tick major size 1.000000
+@    xaxis  tick major color 1
+@    xaxis  tick major linewidth 1.0
+@    xaxis  tick major linestyle 1
+@    xaxis  tick major grid off
+@    xaxis  tick minor color 1
+@    xaxis  tick minor linewidth 1.0
+@    xaxis  tick minor linestyle 1
+@    xaxis  tick minor grid off
+@    xaxis  tick minor size 0.500000
+@    xaxis  ticklabel on
+@    xaxis  ticklabel format general
+@    xaxis  ticklabel prec 5
+@    xaxis  ticklabel formula ""
+@    xaxis  ticklabel append ""
+@    xaxis  ticklabel prepend ""
+@    xaxis  ticklabel angle 0
+@    xaxis  ticklabel skip 0
+@    xaxis  ticklabel stagger 0
+@    xaxis  ticklabel place normal
+@    xaxis  ticklabel offset auto
+@    xaxis  ticklabel offset 0.000000 , 0.010000
+@    xaxis  ticklabel start type auto
+@    xaxis  ticklabel start 0.000000
+@    xaxis  ticklabel stop type auto
+@    xaxis  ticklabel stop 0.000000
+@    xaxis  ticklabel char size 1.000000
+@    xaxis  ticklabel font 0
+@    xaxis  ticklabel color 1
+@    xaxis  tick place both
+@    xaxis  tick spec type none
+@    yaxis  on
+@    yaxis  type zero false
+@    yaxis  offset 0.000000 , 0.000000
+@    yaxis  bar on
+@    yaxis  bar color 1
+@    yaxis  bar linestyle 1
+@    yaxis  bar linewidth 1.0
+@    yaxis  label "E(X) - E(solution) / eV"
+@    yaxis  label layout para
+@    yaxis  label place auto
+@    yaxis  label char size 1.000000
+@    yaxis  label font 0
+@    yaxis  label color 1
+@    yaxis  label place normal
+@    yaxis  tick on
+@    yaxis  tick major 1000
+@    yaxis  tick minor ticks 9
+@    yaxis  tick default 6
+@    yaxis  tick place rounded true
+@    yaxis  tick in
+@    yaxis  tick major size 0.430000
+@    yaxis  tick major color 1
+@    yaxis  tick major linewidth 1.0
+@    yaxis  tick major linestyle 1
+@    yaxis  tick major grid off
+@    yaxis  tick minor color 1
+@    yaxis  tick minor linewidth 1.0
+@    yaxis  tick minor linestyle 1
+@    yaxis  tick minor grid off
+@    yaxis  tick minor size 0.000000
+@    yaxis  ticklabel on
+@    yaxis  ticklabel format general
+@    yaxis  ticklabel prec 5
+@    yaxis  ticklabel formula ""
+@    yaxis  ticklabel append ""
+@    yaxis  ticklabel prepend ""
+@    yaxis  ticklabel angle 0
+@    yaxis  ticklabel skip 0
+@    yaxis  ticklabel stagger 0
+@    yaxis  ticklabel place normal
+@    yaxis  ticklabel offset auto
+@    yaxis  ticklabel offset 0.000000 , 0.010000
+@    yaxis  ticklabel start type auto
+@    yaxis  ticklabel start 0.000000
+@    yaxis  ticklabel stop type auto
+@    yaxis  ticklabel stop 0.000000
+@    yaxis  ticklabel char size 1.000000
+@    yaxis  ticklabel font 0
+@    yaxis  ticklabel color 1
+@    yaxis  tick place both
+@    yaxis  tick spec type none
+@    altxaxis  off
+@    altyaxis  off
+@    legend on
+@    legend loctype view
+@    legend 0.85, 0.8
+@    legend box color 1
+@    legend box pattern 1
+@    legend box linewidth 1.0
+@    legend box linestyle 1
+@    legend box fill color 0
+@    legend box fill pattern 1
+@    legend font 0
+@    legend char size 1.000000
+@    legend color 1
+@    legend length 4
+@    legend vgap 1
+@    legend hgap 1
+@    legend invert false
+@    frame type 0
+@    frame linestyle 1
+@    frame linewidth 1.0
+@    frame color 1
+@    frame pattern 1
+@    frame background color 0
+@    frame background pattern 0
+@    s0 hidden false
+@    s0 type xy
+@    s0 symbol 0
+@    s0 symbol size 1.000000
+@    s0 symbol color 1
+@    s0 symbol pattern 1
+@    s0 symbol fill color 1
+@    s0 symbol fill pattern 0
+@    s0 symbol linewidth 1.0
+@    s0 symbol linestyle 1
+@    s0 symbol char 65
+@    s0 symbol char font 0
+@    s0 symbol skip 0
+@    s0 line type 1
+@    s0 line linestyle 1
+@    s0 line linewidth 2.0
+@    s0 line color 1
+@    s0 line pattern 1
+@    s0 baseline type 0
+@    s0 baseline off
+@    s0 dropline off
+@    s0 fill type 0
+@    s0 fill rule 0
+@    s0 fill color 1
+@    s0 fill pattern 1
+@    s0 avalue off
+@    s0 avalue type 2
+@    s0 avalue char size 1.000000
+@    s0 avalue font 0
+@    s0 avalue color 1
+@    s0 avalue rot 0
+@    s0 avalue format general
+@    s0 avalue prec 3
+@    s0 avalue prepend ""
+@    s0 avalue append ""
+@    s0 avalue offset 0.000000 , 0.000000
+@    s0 errorbar on
+@    s0 errorbar place both
+@    s0 errorbar color 1
+@    s0 errorbar pattern 1
+@    s0 errorbar size 1.000000
+@    s0 errorbar linewidth 1.0
+@    s0 errorbar linestyle 1
+@    s0 errorbar riser linewidth 1.0
+@    s0 errorbar riser linestyle 1
+@    s0 errorbar riser clip off
+@    s0 errorbar riser clip length 0.100000
+@    s0 comment "Cols 0:4"
+@    s0 legend  ""
+@    s1 hidden false
+@    s1 type xycolor
+@    s1 symbol 3
+@    s1 symbol size 0.330000
+@    s1 symbol color 1
+@    s1 symbol pattern 1
+@    s1 symbol fill color 1
+@    s1 symbol fill pattern 1
+@    s1 symbol linewidth 1.0
+@    s1 symbol linestyle 0
+@    s1 symbol char 65
+@    s1 symbol char font 0
+@    s1 symbol skip 0
+@    s1 line type 1
+@    s1 line linestyle 1
+@    s1 line linewidth 1.0
+@    s1 line color 1
+@    s1 line pattern 1
+@    s1 baseline type 0
+@    s1 baseline off
+@    s1 dropline off
+@    s1 fill type 0
+@    s1 fill rule 0
+@    s1 fill color 1
+@    s1 fill pattern 1
+@    s1 avalue off
+@    s1 avalue type 2
+@    s1 avalue char size 1.000000
+@    s1 avalue font 0
+@    s1 avalue color 1
+@    s1 avalue rot 0
+@    s1 avalue format general
+@    s1 avalue prec 3
+@    s1 avalue prepend ""
+@    s1 avalue append ""
+@    s1 avalue offset 0.000000 , 0.000000
+@    s1 errorbar on
+@    s1 errorbar place both
+@    s1 errorbar color 1
+@    s1 errorbar pattern 1
+@    s1 errorbar size 1.000000
+@    s1 errorbar linewidth 1.0
+@    s1 errorbar linestyle 1
+@    s1 errorbar riser linewidth 1.0
+@    s1 errorbar riser linestyle 1
+@    s1 errorbar riser clip off
+@    s1 errorbar riser clip length 0.100000
+@    s1 comment "Cols 1:2:3"
+@    s1 legend  ""
+@g1 on
+@g1 hidden false
+@g1 type XY
+@g1 stacked false
+@g1 bar hgap 0.000000
+@g1 fixedpoint off
+@g1 fixedpoint type 0
+@g1 fixedpoint xy 0.000000, 0.000000
+@g1 fixedpoint format general general
+@g1 fixedpoint prec 6, 6
+@with g1
+@    world xmin 0
+@    world xmax 300
+@    world ymin 1e-09
+@    world ymax 1000
+@    stack world 0, 0, 0, 0
+@    znorm 1
+@    view xmin 0.150000
+@    view xmax 1.143564
+@    view ymin 0.150000
+@    view ymax 0.468182
+@    title ""
+@    title font 0
+@    title size 1.500000
+@    title color 1
+@    subtitle ""
+@    subtitle font 0
+@    subtitle size 1.000000
+@    subtitle color 1
+@    xaxes scale Normal
+@    yaxes scale Logarithmic
+@    xaxes invert off
+@    yaxes invert off
+@    xaxis  on
+@    xaxis  type zero false
+@    xaxis  offset 0.000000 , 0.000000
+@    xaxis  bar on
+@    xaxis  bar color 1
+@    xaxis  bar linestyle 1
+@    xaxis  bar linewidth 1.0
+@    xaxis  label "Iteration number"
+@    xaxis  label layout para
+@    xaxis  label place auto
+@    xaxis  label char size 1.000000
+@    xaxis  label font 0
+@    xaxis  label color 1
+@    xaxis  label place normal
+@    xaxis  tick on
+@    xaxis  tick major 50
+@    xaxis  tick minor ticks 1
+@    xaxis  tick default 6
+@    xaxis  tick place rounded true
+@    xaxis  tick in
+@    xaxis  tick major size 1.000000
+@    xaxis  tick major color 1
+@    xaxis  tick major linewidth 1.0
+@    xaxis  tick major linestyle 1
+@    xaxis  tick major grid off
+@    xaxis  tick minor color 1
+@    xaxis  tick minor linewidth 1.0
+@    xaxis  tick minor linestyle 1
+@    xaxis  tick minor grid off
+@    xaxis  tick minor size 0.500000
+@    xaxis  ticklabel on
+@    xaxis  ticklabel format general
+@    xaxis  ticklabel prec 5
+@    xaxis  ticklabel formula ""
+@    xaxis  ticklabel append ""
+@    xaxis  ticklabel prepend ""
+@    xaxis  ticklabel angle 0
+@    xaxis  ticklabel skip 0
+@    xaxis  ticklabel stagger 0
+@    xaxis  ticklabel place normal
+@    xaxis  ticklabel offset auto
+@    xaxis  ticklabel offset 0.000000 , 0.010000
+@    xaxis  ticklabel start type auto
+@    xaxis  ticklabel start 0.000000
+@    xaxis  ticklabel stop type auto
+@    xaxis  ticklabel stop 0.000000
+@    xaxis  ticklabel char size 1.000000
+@    xaxis  ticklabel font 0
+@    xaxis  ticklabel color 1
+@    xaxis  tick place both
+@    xaxis  tick spec type none
+@    yaxis  on
+@    yaxis  type zero false
+@    yaxis  offset 0.000000 , 0.000000
+@    yaxis  bar on
+@    yaxis  bar color 1
+@    yaxis  bar linestyle 1
+@    yaxis  bar linewidth 1.0
+@    yaxis  label "E(X) - E(solution) / eV"
+@    yaxis  label layout para
+@    yaxis  label place auto
+@    yaxis  label char size 1.000000
+@    yaxis  label font 0
+@    yaxis  label color 1
+@    yaxis  label place normal
+@    yaxis  tick on
+@    yaxis  tick major 1000
+@    yaxis  tick minor ticks 9
+@    yaxis  tick default 3
+@    yaxis  tick place rounded false
+@    yaxis  tick in
+@    yaxis  tick major size 0.360000
+@    yaxis  tick major color 1
+@    yaxis  tick major linewidth 1.0
+@    yaxis  tick major linestyle 1
+@    yaxis  tick major grid off
+@    yaxis  tick minor color 1
+@    yaxis  tick minor linewidth 1.0
+@    yaxis  tick minor linestyle 1
+@    yaxis  tick minor grid off
+@    yaxis  tick minor size 0.000000
+@    yaxis  ticklabel on
+@    yaxis  ticklabel format general
+@    yaxis  ticklabel prec 5
+@    yaxis  ticklabel formula ""
+@    yaxis  ticklabel append ""
+@    yaxis  ticklabel prepend ""
+@    yaxis  ticklabel angle 0
+@    yaxis  ticklabel skip 0
+@    yaxis  ticklabel stagger 0
+@    yaxis  ticklabel place normal
+@    yaxis  ticklabel offset auto
+@    yaxis  ticklabel offset 0.000000 , 0.010000
+@    yaxis  ticklabel start type auto
+@    yaxis  ticklabel start 0.000000
+@    yaxis  ticklabel stop type auto
+@    yaxis  ticklabel stop 0.000000
+@    yaxis  ticklabel char size 1.000000
+@    yaxis  ticklabel font 0
+@    yaxis  ticklabel color 1
+@    yaxis  tick place normal
+@    yaxis  tick spec type none
+@    altxaxis  off
+@    altyaxis  off
+@    legend on
+@    legend loctype view
+@    legend 0.5, 0.8
+@    legend box color 1
+@    legend box pattern 1
+@    legend box linewidth 1.0
+@    legend box linestyle 1
+@    legend box fill color 0
+@    legend box fill pattern 1
+@    legend font 0
+@    legend char size 1.000000
+@    legend color 1
+@    legend length 4
+@    legend vgap 1
+@    legend hgap 1
+@    legend invert false
+@    frame type 0
+@    frame linestyle 1
+@    frame linewidth 1.0
+@    frame color 1
+@    frame pattern 1
+@    frame background color 0
+@    frame background pattern 0
+@    s0 hidden false
+@    s0 type xy
+@    s0 symbol 0
+@    s0 symbol size 1.000000
+@    s0 symbol color 1
+@    s0 symbol pattern 1
+@    s0 symbol fill color 1
+@    s0 symbol fill pattern 0
+@    s0 symbol linewidth 1.0
+@    s0 symbol linestyle 1
+@    s0 symbol char 65
+@    s0 symbol char font 0
+@    s0 symbol skip 0
+@    s0 line type 1
+@    s0 line linestyle 1
+@    s0 line linewidth 2.0
+@    s0 line color 1
+@    s0 line pattern 1
+@    s0 baseline type 0
+@    s0 baseline off
+@    s0 dropline off
+@    s0 fill type 0
+@    s0 fill rule 0
+@    s0 fill color 1
+@    s0 fill pattern 1
+@    s0 avalue off
+@    s0 avalue type 2
+@    s0 avalue char size 1.000000
+@    s0 avalue font 0
+@    s0 avalue color 1
+@    s0 avalue rot 0
+@    s0 avalue format general
+@    s0 avalue prec 3
+@    s0 avalue prepend ""
+@    s0 avalue append ""
+@    s0 avalue offset 0.000000 , 0.000000
+@    s0 errorbar on
+@    s0 errorbar place both
+@    s0 errorbar color 1
+@    s0 errorbar pattern 1
+@    s0 errorbar size 1.000000
+@    s0 errorbar linewidth 1.0
+@    s0 errorbar linestyle 1
+@    s0 errorbar riser linewidth 1.0
+@    s0 errorbar riser linestyle 1
+@    s0 errorbar riser clip off
+@    s0 errorbar riser clip length 0.100000
+@    s0 comment "Cols 0:4"
+@    s0 legend  ""
+@    s2 hidden false
+@    s2 type xycolor
+@    s2 symbol 3
+@    s2 symbol size 0.330000
+@    s2 symbol color 1
+@    s2 symbol pattern 1
+@    s2 symbol fill color 1
+@    s2 symbol fill pattern 1
+@    s2 symbol linewidth 1.0
+@    s2 symbol linestyle 0
+@    s2 symbol char 65
+@    s2 symbol char font 0
+@    s2 symbol skip 0
+@    s2 line type 1
+@    s2 line linestyle 1
+@    s2 line linewidth 1.0
+@    s2 line color 1
+@    s2 line pattern 1
+@    s2 baseline type 0
+@    s2 baseline off
+@    s2 dropline off
+@    s2 fill type 0
+@    s2 fill rule 0
+@    s2 fill color 1
+@    s2 fill pattern 1
+@    s2 avalue off
+@    s2 avalue type 2
+@    s2 avalue char size 1.000000
+@    s2 avalue font 0
+@    s2 avalue color 1
+@    s2 avalue rot 0
+@    s2 avalue format general
+@    s2 avalue prec 3
+@    s2 avalue prepend ""
+@    s2 avalue append ""
+@    s2 avalue offset 0.000000 , 0.000000
+@    s2 errorbar on
+@    s2 errorbar place both
+@    s2 errorbar color 1
+@    s2 errorbar pattern 1
+@    s2 errorbar size 1.000000
+@    s2 errorbar linewidth 1.0
+@    s2 errorbar linestyle 1
+@    s2 errorbar riser linewidth 1.0
+@    s2 errorbar riser linestyle 1
+@    s2 errorbar riser clip off
+@    s2 errorbar riser clip length 0.100000
+@    s2 comment "Cols 1:2:3"
+@    s2 legend  ""
+@target G0.S0
+@type xy
+               0        54.633835
+               1        24.520685
+               2        11.589897
+               3         13.86399
+               4        10.539127
+               5        13.497052
+               6        10.460691
+               7        13.471224
+               8        10.454266
+               9        13.469172
+              10        10.453736
+              11        13.469005
+              12        10.453692
+              13        13.468991
+              14        10.453689
+              15         13.46899
+              16        10.453688
+              17         13.46899
+              18        10.453688
+              19         13.46899
+              20        10.453688
+              21         13.46899
+              22        10.453688
+              23         13.46899
+              24        10.453688
+              25         13.46899
+              26        10.453688
+              27         13.46899
+              28        10.453688
+              29         13.46899
+              30        10.453688
+              31         13.46899
+              32        10.453688
+              33         13.46899
+              34        10.453688
+              35         13.46899
+              36        10.453688
+              37         13.46899
+              38        10.453688
+              39         13.46899
+              40        10.453688
+              41         13.46899
+              42        10.453688
+              43         13.46899
+              44        10.453688
+              45         13.46899
+              46        10.453688
+              47         13.46899
+              48        10.453688
+              49         13.46899
+              50        10.453688
+              51         13.46899
+              52        10.453688
+              53         13.46899
+              54        10.453688
+              55         13.46899
+              56        10.453688
+              57         13.46899
+              58        10.453688
+              59         13.46899
+              60        10.453688
+              61         13.46899
+              62        10.453688
+              63         13.46899
+              64        10.453688
+              65         13.46899
+              66        10.453688
+              67         13.46899
+              68        10.453688
+              69         13.46899
+              70        10.453688
+              71         13.46899
+              72        10.453688
+              73         13.46899
+              74        10.453688
+              75         13.46899
+              76        10.453688
+              77         13.46899
+              78        10.453688
+              79         13.46899
+              80        10.453688
+              81         13.46899
+              82        10.453688
+              83         13.46899
+              84        10.453688
+              85         13.46899
+              86        10.453688
+              87         13.46899
+              88        10.453688
+              89         13.46899
+              90        10.453688
+              91         13.46899
+              92        10.453688
+              93         13.46899
+              94        10.453688
+              95         13.46899
+              96        10.453688
+              97         13.46899
+              98        10.453688
+              99         13.46899
+             100        10.453688
+             101         13.46899
+             102        10.453688
+             103         13.46899
+             104        10.453688
+             105         13.46899
+             106        10.453688
+             107         13.46899
+             108        10.453688
+             109         13.46899
+             110        10.453688
+             111         13.46899
+             112        10.453688
+             113         13.46899
+             114        10.453688
+             115         13.46899
+             116        10.453688
+             117         13.46899
+             118        10.453688
+             119         13.46899
+             120        10.453688
+             121         13.46899
+             122        10.453688
+             123         13.46899
+             124        10.453688
+             125         13.46899
+             126        10.453688
+             127         13.46899
+             128        10.453688
+             129         13.46899
+             130        10.453688
+             131         13.46899
+             132        10.453688
+             133         13.46899
+             134        10.453688
+             135         13.46899
+             136        10.453688
+             137         13.46899
+             138        10.453688
+             139         13.46899
+             140        10.453688
+             141         13.46899
+             142        10.453688
+             143         13.46899
+             144        10.453688
+             145         13.46899
+             146        10.453688
+             147         13.46899
+             148        10.453688
+             149         13.46899
+             150        10.453688
+             151         13.46899
+             152        10.453688
+             153         13.46899
+             154        10.453688
+             155         13.46899
+             156        10.453688
+             157         13.46899
+             158        10.453688
+             159         13.46899
+             160        10.453688
+             161         13.46899
+             162        10.453688
+             163         13.46899
+             164        10.453688
+             165         13.46899
+             166        10.453688
+             167         13.46899
+             168        10.453688
+             169         13.46899
+             170        10.453688
+             171         13.46899
+             172        10.453688
+             173         13.46899
+             174        10.453688
+             175         13.46899
+             176        10.453688
+             177         13.46899
+             178        10.453688
+             179         13.46899
+             180        10.453688
+             181         13.46899
+             182        10.453688
+             183         13.46899
+             184        10.453688
+             185         13.46899
+             186        10.453688
+             187         13.46899
+             188        10.453688
+             189         13.46899
+             190        10.453688
+             191         13.46899
+             192        10.453688
+             193         13.46899
+             194        10.453688
+             195         13.46899
+             196        10.453688
+             197         13.46899
+             198        10.453688
+             199         13.46899
+             200        10.453688
+             201         13.46899
+             202        10.453688
+             203         13.46899
+             204        10.453688
+             205         13.46899
+             206        10.453688
+             207         13.46899
+             208        10.453688
+             209         13.46899
+             210        10.453688
+             211         13.46899
+             212        10.453688
+             213         13.46899
+             214        10.453688
+             215         13.46899
+             216        10.453688
+             217         13.46899
+             218        10.453688
+             219         13.46899
+             220        10.453688
+             221         13.46899
+             222        10.453688
+             223         13.46899
+             224        10.453688
+             225         13.46899
+             226        10.453688
+             227         13.46899
+             228        10.453688
+             229         13.46899
+             230        10.453688
+             231         13.46899
+             232        10.453688
+             233         13.46899
+             234        10.453688
+             235         13.46899
+             236        10.453688
+             237         13.46899
+             238        10.453688
+             239         13.46899
+             240        10.453688
+             241         13.46899
+             242        10.453688
+             243         13.46899
+             244        10.453688
+             245         13.46899
+             246        10.453688
+             247         13.46899
+             248        10.453688
+             249         13.46899
+             250        10.453688
+             251         13.46899
+             252        10.453688
+             253         13.46899
+             254        10.453688
+             255         13.46899
+             256        10.453688
+             257         13.46899
+             258        10.453688
+             259         13.46899
+             260        10.453688
+             261         13.46899
+             262        10.453688
+             263         13.46899
+             264        10.453688
+             265         13.46899
+             266        10.453688
+             267         13.46899
+             268        10.453688
+             269         13.46899
+             270        10.453688
+             271         13.46899
+             272        10.453688
+             273         13.46899
+             274        10.453688
+             275         13.46899
+             276        10.453688
+             277         13.46899
+             278        10.453688
+             279         13.46899
+             280        10.453688
+             281         13.46899
+             282        10.453688
+             283         13.46899
+             284        10.453688
+             285         13.46899
+             286        10.453688
+             287         13.46899
+             288        10.453688
+             289         13.46899
+             290        10.453688
+             291         13.46899
+             292        10.453688
+             293         13.46899
+             294        10.453688
+             295         13.46899
+             296        10.453688
+             297         13.46899
+             298        10.453688
+             299         13.46899
+&
+@target G0.S1
+@type xycolor
+               1        377.43671                4
+               2         54.62882                4
+               3         24.51567                4
+               4        11.584882                2
+               5        8.4838519                2
+               6        8.4833136                2
+               7        8.4822416                2
+               8         8.480115                2
+               9          8.47593                2
+              10        8.4678202                2
+              11        8.4525476                2
+              12        8.4251278                2
+              13        8.3787042                2
+              14        8.3005102                2
+              15        8.1556672                2
+              16        7.8812026                2
+              17        7.7526833                2
+              18        7.5031685                2
+              19        7.3842475                2
+              20        7.1527072                2
+              21        7.0409786                2
+              22        6.8312701                2
+              23        6.7248102                2
+              24        6.5915518                2
+              25        6.4832166                2
+              26        6.3775437                2
+              27        6.2743523                2
+              28        6.1735921                2
+              29        6.0751237                2
+              30        5.9788982                2
+              31         5.884805                2
+              32        5.7927968                2
+              33        5.7027842                2
+              34        5.6147214                4
+              35        5.2920598                4
+              36        3.5085298                2
+              37        3.1360891                2
+              38        2.9808852                2
+              39        2.7026142                2
+              40        2.5816392                2
+              41        2.3627463                2
+              42        2.2636748                2
+              43        2.0992762                2
+              44        2.0134861                2
+              45        1.9875099                2
+              46        1.8956341                2
+              47        1.8102037                2
+              48        1.7304546                2
+              49        1.6559638                2
+              50        1.5861663                2
+              51        1.5207085                2
+              52        1.4591635                2
+              53        1.4012381                2
+              54        1.3466041                2
+              55        1.2950195                2
+              56        1.2462281                2
+              57        1.2000304                2
+              58        1.1562238                2
+              59        1.1146436                2
+              60        1.0751271                2
+              61        1.0375377                2
+              62        1.0017434                2
+              63       0.96763021                2
+              64       0.96039011                4
+              65       0.95054331                4
+              66       0.65130461                2
+              67       0.31733801                4
+              68       0.00394581                4
+              69       0.00089351                4
+              70       0.00061831                4
+              71       0.00048631                4
+              72       0.00039881                4
+              73       0.00032441                4
+              74       0.00026771                4
+              75       0.00021841                4
+              76       0.00018011                4
+              77       0.00014711                4
+              78       0.00012121                4
+              79        9.911e-05                4
+              80        8.161e-05                4
+              81        6.681e-05                4
+              82        5.491e-05                4
+              83        4.501e-05                4
+              84        3.701e-05                4
+              85        3.031e-05                4
+              86        2.491e-05                4
+              87        2.041e-05                4
+              88        1.671e-05                4
+              89        1.371e-05                4
+              90        1.131e-05                4
+              91         9.21e-06                4
+              92         7.61e-06                4
+              93         6.21e-06                4
+              94         5.11e-06                4
+              95         4.21e-06                4
+              96         3.41e-06                4
+              97         2.81e-06                4
+              98         2.31e-06                4
+              99         1.91e-06                4
+             100         1.51e-06                4
+             101         1.21e-06                4
+             102         1.01e-06                4
+             103    8.1000001e-07                4
+             104          7.1e-07                4
+             105          5.1e-07                4
+             106          4.1e-07                4
+             107          4.1e-07                4
+             108    3.1000001e-07                4
+             109          2.1e-07                4
+             110          2.1e-07                4
+             111    1.1000001e-07                4
+             112    1.1000001e-07                4
+             113    1.1000001e-07                4
+             114    1.1000001e-07                4
+             115            1e-08                4
+             116            1e-08                4
+             117            1e-08                4
+             118            1e-08                4
+             119            1e-08                4
+             120            1e-08                4
+             121            1e-08                4
+             122            1e-08                4
+             123            1e-08                4
+             124            1e-08                4
+             125            1e-08                4
+             126            1e-08                4
+             127            1e-08                4
+             128            1e-08                4
+             129            1e-08                4
+             130            1e-08                4
+             131            1e-08                4
+             132            1e-08                4
+             133            1e-08                4
+             134            1e-08                4
+             135            1e-08                4
+             136            1e-08                4
+             137            1e-08                4
+             138            1e-08                4
+             139            1e-08                4
+             140            1e-08                4
+&
+@target G1.S0
+@type xy
+               0         16.92561
+               1        6.5849927
+               2        7.0339931
+               3        4.2359584
+               4        6.8397356
+               5        4.1635509
+               6        6.8252927
+               7        4.1583076
+               8        6.8241242
+               9        4.1578922
+              10        6.8240252
+              11        4.1578576
+              12        6.8240165
+              13        4.1578546
+              14        6.8240158
+              15        4.1578543
+              16        6.8240157
+              17        4.1578543
+              18        6.8240157
+              19        4.1578543
+              20        6.8240157
+              21        4.1578543
+              22        6.8240157
+              23        4.1578543
+              24        6.8240157
+              25        4.1578543
+              26        6.8240157
+              27        4.1578543
+              28        6.8240157
+              29        4.1578543
+              30        6.8240157
+              31        4.1578543
+              32        6.8240157
+              33        4.1578543
+              34        6.8240157
+              35        4.1578543
+              36        6.8240157
+              37        4.1578543
+              38        6.8240157
+              39        4.1578543
+              40        6.8240157
+              41        4.1578543
+              42        6.8240157
+              43        4.1578543
+              44        6.8240157
+              45        4.1578543
+              46        6.8240157
+              47        4.1578543
+              48        6.8240157
+              49        4.1578543
+              50        6.8240157
+              51        4.1578543
+              52        6.8240157
+              53        4.1578543
+              54        6.8240157
+              55        4.1578543
+              56        6.8240157
+              57        4.1578543
+              58        6.8240157
+              59        4.1578543
+              60        6.8240157
+              61        4.1578543
+              62        6.8240157
+              63        4.1578543
+              64        6.8240157
+              65        4.1578543
+              66        6.8240157
+              67        4.1578543
+              68        6.8240157
+              69        4.1578543
+              70        6.8240157
+              71        4.1578543
+              72        6.8240157
+              73        4.1578543
+              74        6.8240157
+              75        4.1578543
+              76        6.8240157
+              77        4.1578543
+              78        6.8240157
+              79        4.1578543
+              80        6.8240157
+              81        4.1578543
+              82        6.8240157
+              83        4.1578543
+              84        6.8240157
+              85        4.1578543
+              86        6.8240157
+              87        4.1578543
+              88        6.8240157
+              89        4.1578543
+              90        6.8240157
+              91        4.1578543
+              92        6.8240157
+              93        4.1578543
+              94        6.8240157
+              95        4.1578543
+              96        6.8240157
+              97        4.1578543
+              98        6.8240157
+              99        4.1578543
+             100        6.8240157
+             101        4.1578543
+             102        6.8240157
+             103        4.1578543
+             104        6.8240157
+             105        4.1578543
+             106        6.8240157
+             107        4.1578543
+             108        6.8240157
+             109        4.1578543
+             110        6.8240157
+             111        4.1578543
+             112        6.8240157
+             113        4.1578543
+             114        6.8240157
+             115        4.1578543
+             116        6.8240157
+             117        4.1578543
+             118        6.8240157
+             119        4.1578543
+             120        6.8240157
+             121        4.1578543
+             122        6.8240157
+             123        4.1578543
+             124        6.8240157
+             125        4.1578543
+             126        6.8240157
+             127        4.1578543
+             128        6.8240157
+             129        4.1578543
+             130        6.8240157
+             131        4.1578543
+             132        6.8240157
+             133        4.1578543
+             134        6.8240157
+             135        4.1578543
+             136        6.8240157
+             137        4.1578543
+             138        6.8240157
+             139        4.1578543
+             140        6.8240157
+             141        4.1578543
+             142        6.8240157
+             143        4.1578543
+             144        6.8240157
+             145        4.1578543
+             146        6.8240157
+             147        4.1578543
+             148        6.8240157
+             149        4.1578543
+             150        6.8240157
+             151        4.1578543
+             152        6.8240157
+             153        4.1578543
+             154        6.8240157
+             155        4.1578543
+             156        6.8240157
+             157        4.1578543
+             158        6.8240157
+             159        4.1578543
+             160        6.8240157
+             161        4.1578543
+             162        6.8240157
+             163        4.1578543
+             164        6.8240157
+             165        4.1578543
+             166        6.8240157
+             167        4.1578543
+             168        6.8240157
+             169        4.1578543
+             170        6.8240157
+             171        4.1578543
+             172        6.8240157
+             173        4.1578543
+             174        6.8240157
+             175        4.1578543
+             176        6.8240157
+             177        4.1578543
+             178        6.8240157
+             179        4.1578543
+             180        6.8240157
+             181        4.1578543
+             182        6.8240157
+             183        4.1578543
+             184        6.8240157
+             185        4.1578543
+             186        6.8240157
+             187        4.1578543
+             188        6.8240157
+             189        4.1578543
+             190        6.8240157
+             191        4.1578543
+             192        6.8240157
+             193        4.1578543
+             194        6.8240157
+             195        4.1578543
+             196        6.8240157
+             197        4.1578543
+             198        6.8240157
+             199        4.1578543
+             200        6.8240157
+             201        4.1578543
+             202        6.8240157
+             203        4.1578543
+             204        6.8240157
+             205        4.1578543
+             206        6.8240157
+             207        4.1578543
+             208        6.8240157
+             209        4.1578543
+             210        6.8240157
+             211        4.1578543
+             212        6.8240157
+             213        4.1578543
+             214        6.8240157
+             215        4.1578543
+             216        6.8240157
+             217        4.1578543
+             218        6.8240157
+             219        4.1578543
+             220        6.8240157
+             221        4.1578543
+             222        6.8240157
+             223        4.1578543
+             224        6.8240157
+             225        4.1578543
+             226        6.8240157
+             227        4.1578543
+             228        6.8240157
+             229        4.1578543
+             230        6.8240157
+             231        4.1578543
+             232        6.8240157
+             233        4.1578543
+             234        6.8240157
+             235        4.1578543
+             236        6.8240157
+             237        4.1578543
+             238        6.8240157
+             239        4.1578543
+             240        6.8240157
+             241        4.1578543
+             242        6.8240157
+             243        4.1578543
+             244        6.8240157
+             245        4.1578543
+             246        6.8240157
+             247        4.1578543
+             248        6.8240157
+             249        4.1578543
+             250        6.8240157
+             251        4.1578543
+             252        6.8240157
+             253        4.1578543
+             254        6.8240157
+             255        4.1578543
+             256        6.8240157
+             257        4.1578543
+             258        6.8240157
+             259        4.1578543
+             260        6.8240157
+             261        4.1578543
+             262        6.8240157
+             263        4.1578543
+             264        6.8240157
+             265        4.1578543
+             266        6.8240157
+             267        4.1578543
+             268        6.8240157
+             269        4.1578543
+             270        6.8240157
+             271        4.1578543
+             272        6.8240157
+             273        4.1578543
+             274        6.8240157
+             275        4.1578543
+             276        6.8240157
+             277        4.1578543
+             278        6.8240157
+             279        4.1578543
+             280        6.8240157
+             281        4.1578543
+             282        6.8240157
+             283        4.1578543
+             284        6.8240157
+             285        4.1578543
+             286        6.8240157
+             287        4.1578543
+             288        6.8240157
+             289        4.1578543
+             290        6.8240157
+             291        4.1578543
+             292        6.8240157
+             293        4.1578543
+             294        6.8240157
+             295        4.1578543
+             296        6.8240157
+             297        4.1578543
+             298        6.8240157
+             299        4.1578543
+&
+@target G1.S2
+@type xycolor
+               1         511.3499                4
+               2         16.91995                4
+               3        6.5793328                2
+               4        3.5647016                2
+               5        3.4482897                2
+               6        3.3981204                2
+               7        3.1358314                2
+               8        3.0156043                2
+               9         2.930252                2
+              10        2.7186206                2
+              11        2.7100239                2
+              12        2.5492815                2
+              13        2.4513344                2
+              14        2.3504785                2
+              15        2.2566029                2
+              16        2.1274759                2
+              17        2.0175167                2
+              18        2.0172648                2
+              19        2.0167616                2
+              20        2.0157582                2
+              21        2.0137628                2
+              22        2.0098135                2
+              23        2.0020546                2
+              24        1.9869321                2
+              25        1.9575126                2
+              26         1.900162                2
+              27        1.7904939                2
+              28        1.7398794                2
+              29        1.6433205                2
+              30        1.5988415                2
+              31        1.5142061                2
+              32        1.4752653                2
+              33        1.4015745                2
+              34        1.2624799                2
+              35       0.92845053                2
+              36       0.85742729                2
+              37       0.84039797                2
+              38       0.83814606                2
+              39       0.81854986                2
+              40       0.79558846                2
+              41       0.78836675                2
+              42       0.78727253                2
+              43       0.77956076                2
+              44       0.76974112                2
+              45       0.76350409                2
+              46       0.75736348                2
+              47       0.75292404                2
+              48       0.74813814                2
+              49       0.74558626                2
+              50       0.74023916                2
+              51       0.73810559                2
+              52       0.73610463                2
+              53       0.72748506                2
+              54       0.72481876                2
+              55       0.72168262                2
+              56       0.71666785                2
+              57       0.71376919                2
+              58       0.71030365                2
+              59       0.70954212                2
+              60       0.70451486                2
+              61       0.70055557                2
+              62       0.69733031                2
+              63       0.69356681                2
+              64       0.69089476                2
+              65       0.68785395                2
+              66       0.68564433                2
+              67       0.68078167                2
+              68       0.67854842                2
+              69       0.67675031                2
+              70       0.67344153                2
+              71       0.67197517                2
+              72       0.66727508                2
+              73       0.66520823                2
+              74       0.66358789                2
+              75        0.6604534                2
+              76       0.65922171                2
+              77       0.65470387                2
+              78       0.65276593                2
+              79       0.65124111                2
+              80       0.64825379                2
+              81       0.64724299                2
+              82       0.64272494                2
+              83       0.64076558                2
+              84       0.63921201                2
+              85       0.63656635                2
+              86       0.63462172                2
+              87       0.63273832                2
+              88       0.63114626                2
+              89       0.62873122                2
+              90       0.62674276                2
+              91       0.62486529                2
+              92       0.62326665                2
+              93       0.62089526                2
+              94       0.61890771                2
+              95       0.61702476                2
+              96       0.61540985                2
+              97       0.61306604                2
+              98       0.61107491                2
+              99       0.60917708                2
+             100       0.60753764                2
+             101       0.60521075                2
+             102       0.60321154                2
+             103       0.60129126                2
+             104       0.59962059                2
+             105       0.59730284                2
+             106       0.59529171                2
+             107       0.59334297                2
+             108       0.59163572                2
+             109       0.58932125                2
+             110       0.58729506                2
+             111       0.58531318                2
+             112       0.58356519                2
+             113        0.5812495                2
+             114       0.57920584                2
+             115       0.57718721                2
+             116       0.57539534                2
+             117       0.57307497                2
+             118       0.57101204                2
+             119       0.56895399                2
+             120       0.56711594                2
+             121       0.56478828                2
+             122       0.56469381                2
+             123       0.56029132                2
+             124       0.55934737                2
+             125       0.55555573                2
+             126       0.55342341                2
+             127       0.55142917                2
+             128       0.54934811                2
+             129       0.54699174                2
+             130       0.54545894                2
+             131       0.54365286                2
+             132       0.53928768                2
+             133        0.5380036                2
+             134       0.53448922                2
+             135       0.53229262                2
+             136       0.53015566                2
+             137       0.52804324                2
+             138       0.52571113                2
+             139       0.52543201                2
+             140       0.51984162                2
+             141       0.51795636                2
+             142       0.51732696                2
+             143       0.51660268                2
+             144       0.51001277                2
+             145       0.50878769                2
+             146       0.50297778                2
+             147       0.50080032                2
+             148        0.4997807                2
+             149       0.49549423                2
+             150       0.49365291                2
+             151       0.49140348                2
+             152       0.48846955                2
+             153       0.48658616                2
+             154       0.48528872                2
+             155       0.48092268                2
+             156        0.4787138                2
+             157       0.47598619                2
+             158       0.47374391                2
+             159       0.47234099                2
+             160       0.46840001                2
+             161       0.46645089                2
+             162       0.46321794                2
+             163        0.4608897                2
+             164       0.46044615                2
+             165       0.45550614                2
+             166       0.45283057                2
+             167       0.45057181                2
+             168       0.44886254                2
+             169       0.44519638                2
+             170       0.44286099                2
+             171       0.43933933                2
+             172       0.43687731                2
+             173       0.43392769                2
+             174       0.43280808                2
+             175       0.42981388                2
+             176       0.42398277                2
+             177       0.42362427                2
+             178       0.41878451                2
+             179       0.41587404                2
+             180       0.41560352                2
+             181       0.41060838                2
+             182       0.40751994                2
+             183       0.40406968                2
+             184       0.40240164                2
+             185       0.39840093                2
+             186       0.39565978                2
+             187       0.39421296                2
+             188       0.39063778                2
+             189       0.38778995                2
+             190       0.38720068                2
+             191       0.38308732                2
+             192       0.38209997                2
+             193        0.3766831                2
+             194       0.37287325                2
+             195       0.37010054                2
+             196       0.36695456                2
+             197       0.36517882                2
+             198       0.36456207                2
+             199       0.36277024                2
+             200       0.35658323                2
+             201       0.35479444                2
+             202       0.35376047                2
+             203        0.3527999                2
+             204       0.34626458                2
+             205       0.34420949                2
+             206       0.34400356                2
+             207       0.34300552                2
+             208       0.33552971                2
+             209       0.33315422                2
+             210          0.32926                2
+             211       0.32550622                2
+             212        0.3228641                2
+             213       0.32136657                2
+             214       0.31778804                2
+             215       0.31506139                2
+             216       0.31176692                2
+             217       0.31101276                4
+             218       0.30943694                2
+             219       0.07630864                4
+             220       0.00176198                4
+             221       0.00118099                2
+             222        0.0007175                4
+             223        5.075e-05                4
+             224        4.156e-05                2
+             225        3.663e-05                4
+             226        2.214e-05                4
+             227        1.911e-05                4
+             228        1.714e-05                4
+             229        1.659e-05                2
+             230        1.503e-05                4
+             231        1.117e-05                4
+             232         9.98e-06                4
+             233         9.62e-06                2
+             234         8.73e-06                4
+             235          6.5e-06                4
+             236         5.78e-06                4
+             237         5.51e-06                2
+             238         5.02e-06                4
+             239         3.77e-06                4
+             240         3.34e-06                4
+             241         3.16e-06                2
+             242         2.88e-06                4
+             243         2.18e-06                4
+             244         1.92e-06                4
+             245         1.81e-06                2
+             246         1.65e-06                4
+             247         1.26e-06                4
+             248          1.1e-06                4
+             249         1.03e-06                2
+             250          9.4e-07                4
+             251    7.1999999e-07                4
+             252    6.2999999e-07                4
+             253          5.8e-07                2
+             254          5.3e-07                4
+             255            4e-07                4
+             256          3.5e-07                4
+             257    3.1999999e-07                2
+             258    2.8999999e-07                4
+             259          2.2e-07                4
+             260          1.9e-07                4
+             261          1.7e-07                2
+             262    1.5999999e-07                4
+             263    1.0999999e-07                4
+             264            1e-07                4
+             265    7.9999999e-08                2
+             266    7.9999999e-08                4
+             267    4.9999989e-08                4
+             268    3.9999995e-08                4
+             269    3.0000002e-08                2
+             270    3.0000002e-08                4
+             271    1.9999994e-08                4
+             272            1e-08                4
+&

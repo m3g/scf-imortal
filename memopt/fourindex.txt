@@ -1,0 +1,30 @@
+                                                                         parameter(n1=50,n2=17,n3=30,n4=11) 
+       dimension a(n1, n2, n3, n4)
+
+        
+       do i = 1, n1
+       do j = 1, n2
+       do k = 1, n3
+        do k1 = 1, n4
+       a(i, j, k, k1) = sin(dfloat(2*i +5*j + 11*k + 13*k1))
+       end do
+       end do
+       end do
+        end do
+        write(*, *) ' i, j, k, k1:'
+        read(*, *) i, j, k, k1
+        write(*, *)' a(i, j, k, k1) = ', a(i, j, k, k1)
+
+        call testar(i, j, k, k1, n1, n2, n3, a)
+        stop
+        end
+
+        subroutine testar(i, j, k, k1,  n1, n2, n3, a)
+        dimension a(*)
+c  La formula que sigue es la que importa
+c  Observa que el numero reservado para la ultima coordenada (n4) no
+c  importa.
+        l = n1*n2*n3* (k1-1) + n1*n2 * (k-1) + n1 * (j-1) + i
+        write(*, *)' a(l) =', a(l)
+        return
+        end

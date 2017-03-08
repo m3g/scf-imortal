@@ -1,0 +1,1951 @@
+
+\documentclass[11pt]{article}
+\renewcommand{\baselinestretch}{1.25}
+\usepackage{epsfig}
+\usepackage{latexsym}
+
+\setlength{\textwidth}     {16.0cm}
+\setlength{\evensidemargin}{ 0.0cm}
+\setlength{\oddsidemargin} { 0.0cm}
+\setlength{\textheight}    {21.0cm}
+\setlength{\topmargin}     {-0.5cm}
+\setlength{\baselineskip}  { 0.7cm}
+
+\newcommand{\halmos}{\hfill $\;\;\;\Box$\\}
+\newcommand{\R}{I\!\!R}
+\newcommand{\N}{I\!\!N}
+\newcommand{\De}{\Delta_{k, \ell}}
+\newcommand{\ov}{\overline}
+
+\begin{document}
+
+\title{A practical and globally convergent trust-region method for SCF
+electronic structure calculations
+       }
+
+\author{
+Juliano B. Francisco\thanks{ 
+  Department of Applied Mathematics, IMECC-UNICAMP, 
+  University
+  of Campinas, CP 6065, 13081-970 Campinas SP, Brazil. 
+  e-mail:
+  juliano@ime.unicamp.br}
+\and
+Jos\'e Mario Mart\'{\i}nez\thanks{
+  Department of Applied Mathematics, IMECC-UNICAMP, 
+  University
+  of Campinas, CP 6065, 13081-970 Campinas SP, Brazil. 
+ e-mail: martinez@ime.unicamp.br}
+\and
+Leandro Mart\'{\i}nez\thanks{
+  Department of Physical Chemistry, IQ-UNICAMP, 
+  University of Campinas, CP 6065, 13081-970 Campinas SP, Brazil. 
+  e-mail: lmartinez@iqm.unicamp.br}
+}
+
+\date{July 16, 2004.}
+ 
+
+\maketitle
+
+
+\begin{abstract}
+Fast and reliable algorithms for electronic-structure 
+calculations are frequently required, particularly when dealing with systems
+with complex wave functions.
+In this paper, Closed Shell Restricted Hartree-Fock electronic-structure
+calculations are
+addressed as finite-di\-men\-sional nonlinear programming problems with
+weighted orthogonality constraints. A Levenberg-Marquardt-like
+modification of a trust-region algorithm for constrained optimization is developed for
+solving this problem. It is proved that this algorithm is globally
+convergent.
+ It is shown that the main
+subproblems used by the nonlinear programming algorithm coincide with
+classical fixed-point iterations and that the subproblems that ensure
+global convergence are easy-to-compute projections. Numerical
+experiments are presented, which show that the method successfully
+solves electronic structure problems with unstable convergence
+properties from any initial point. The method may be coupled with
+ acceleration techniques maintaining its convergence
+properties.\\ 
+
+
+\noindent   
+{\bf Key words:} Electronic structure calculations, Hartree-Fock
+equations, self consistent field, Trust-region algorithms, Nonlinear
+programming, regularization, Levenberg-Marquardt methods, convergence. 
+ \\ [2mm]
+\end{abstract}
+
+
+
+\section{Introduction}
+
+Electronic structure calculations are being used 
+in an increasingly large number of research fields. Several well
+developed computer packages are available that provide a large scope of
+algorithms and analytic tools in such a way that it is not required that
+the users fully understand the methods for obtaining  valuable
+results. For this to happen, it has been necessary that the algorithms
+involved become faster, user-independent, and reliable. The basis
+of most electronic structure computations are the fast and inexpensive
+SCF (self consistent field) 
+ algorithms. The ones based on Hartree-Fock (HF) and Kohn-Sham density
+functional theories are the most popular \cite{szabo,kohn96}. Since these problems are
+nonlinear, the algorithms require iterative updating of the
+variables (density matrix or eigenvectors of the Fock matrix) until
+self-consistency is achieved and hence a solution is found. 
+
+The first method
+designed to solve the HF problem was based on a naive fixed-point
+iteration that consists  on the construction of the Fock matrix
+from the current guess followed by its diagonalization in order to
+obtain the new set of orbitals. This method has  slow and unstable convergence
+properties 
+and, thus, is no longer used for practical
+purposes. 
+However, some of the methods currently used still
+rely on the fixed-point iteration in some way. Particularly, the Direct
+Inversion of the Iterative Subspace method of Pulay (DIIS) \cite{pulay82}, 
+which is the most successful
+acceleration scheme up to date, was designed to stabilize the fixed-point
+iterations by an extrapolation of the Fock matrix that aims to minimize 
+ residual vector norms. Although the DIIS method is  also used in our days in
+different contexts \cite{daniels00}, it is in its original form that it
+is most frequently employed \cite{gamess,gaussian}. 
+
+Other techniques were proposed to improve
+convergence of SCF iterations
+\cite{pulay82,daniels00,pulay80,seeger76,vacek99,rabuck99,fournier90}. 
+In the Level-Shift method (the first algorithm claimed to have
+unconditional convergence properties \cite{saunders73}) the virtual
+orbitals are shifted to higher energies. This method depends on a user
+specified parameter which can be obtained only  by trial and error
+\cite{daniels00,livrogordo}. The Second-Order SCF method (SOSCF)
+\cite{bacskay81} 
+ relies on an exponential parametrization of
+the energy as a function of the density matrix. The energy minimization
+ problem becomes
+unrestricted and Newton's Method for unconstrained optimization is
+used. This method has robust convergence properties, but it relies 
+on the availability of the Hessian, which is computationally very 
+expensive. Other methods based on the exponential parametrization of the
+energy have been proposed, but global convergence is hard to obtain 
+since matrix exponentials are not computed exactly \cite{daniels00}.
+Recently, Canc\`es and Le Bris
+ developed an Optimal Damping Algorithm (ODA) for which they proved global
+convergence whenever the iterates satisfy a {\it Uniform well-posedness} (UWP)
+assumption \cite{cances00,cancesproof}. Coupled with DIIS, this
+method provides  more robust convergence than DIIS alone and preserves 
+competitive convergence rates \cite{kudin02}. Therefore, the accelerated ODA 
+became closer to a fully reliable, user-independent method. 
+
+Here we introduce 
+ a new trust-region 
+optimization algorithm that exhibits convergence for Closed Shell Restricted Hartree-Fock 
+SCF iterations without UWP or related assumptions on the sequence itself.
+  The new  method
+takes the SCF iterations to a solution from any initial point and is not
+dependent on user-specified parameters. One of the most important features of
+the new algorithm is that the classical fixed-point step is naturally
+incorporated to its structure. The first procedure at each iteration of the
+  trust-region method will be to minimize a quadratic approximation of the energy
+function. We give a simple proof that a solution of this subproblem is given by
+the classical fixed-point iteration. 
+
+  The trust-region approach has also been used by Torgensen et al
+\cite{torgensen} in a recent independent research. Their argument for using trust
+regions, however, is different from ours. It relies on the observation that,
+although first-order information of the objective function coincides with the
+one of the SCF model, second order derivatives are different (see, also,
+\cite{livrogordo}, Section~10.9). So, the model is reliable only in a
+neighborhood of the current approximation and the confidence region must be
+always reduced. This is a valuable and realistic argument although
+optimization experience in many areas recommend to try to use always large
+steps far from the solution \cite{powell}.     
+
+  This paper is organized as follows. In Section~2 we describe the general
+lines of the forthcoming trust-region algorithm and the main features of its
+implementation. In Section~3 we recall definitions and
+properties of the problem and we give a simple proof
+  that the main subproblem solved in the
+trust-region method coincides with the fixed-point iteration. In Section~4 we
+briefly describe the resolution of simple quadratic trust-region
+  problems and we state the
+fact that these solutions are easily computed nonlinear projections. The
+rigorous definition of the trust-region algorithm for our problem is given in
+Section~5. In Section~6 we describe the numerical experiments and in
+Section~7 we state conclusions and lines for future results. The appendices
+contain a rigorous convergence proof for the algorithm and the description of
+the nonlinear projection procedure used in reduced trust regions.  
+
+
+
+\section{Algorithmic overview}
+
+The algorithm presented here is a trust-region method \cite{cgtbook}. The
+main iteration uses a  quadratic approximation of the
+objective function around the current iterate and 
+  minimizes  
+this
+ quadratic model  subject to the problem constraints (in this case, weighted 
+orthonormality constraints). Once the quadratic model is minimized, a
+new {\it trial point} is obtained. Then, we test whether the decrease of the 
+ objective function
+  at the trial point ({\it Actual Reduction}) 
+is meaningful when compared to the reduction of the
+quadratic model ({\it Predicted Reduction}). Of course,
+ the predicted reduction will be similar to
+the actual reduction whenever the quadratic model is
+a good approximation of the objective function. If the Actual Reduction is at
+least a given fraction of the Predicted Reduction, 
+ the trial point is
+accepted and the trust-region iteration finishes. 
+
+ The energy at the trial point obtained by the minimization
+of the model may be higher (or, perhaps, not sufficiently lower)
+ than the energy at the
+current iterate. In this case, the trial point is not accepted.
+ Consequently, the algorithm
+proceeds minimizing a simple quadratic model of the energy 
+ in a smaller  trust region around the current
+ point. This process is repeated and, if the trust region is small enough, the
+decrease of the true energy becomes of the same order as the decrease of the
+quadratic model energy. 
+
+So, the output of a typical iteration may be one of the following:
+
+\begin{enumerate}
+ \item The true energy is sufficiently decreased and the trial
+point is accepted; 
+
+\item The trust region is reduced until the trial point
+is the same as the current point up to some desired precision. This is usually
+detected beforehand since in this case the current point must be a
+stationary point 
+of the quadratic model. 
+
+\end{enumerate}
+
+ In the first case, 
+the iterative process continues and the new iterate is the accepted trial
+point.
+  In the second case the 
+ current point satisfies the optimality conditions of the original problem. 
+
+A trust-region method for arbitrary constraints \cite{trusarb}
+  is computationally implementable  when
+ a meaningful quadratic model is easy to obtain, its minimum subject to the
+constraints of the problem is computable and 
+minimizers of a suitable quadratic model subject to the problem
+constraints and smaller trust regions are also easy to compute.
+These conditions may not be easily fulfilled. For example, the quadratic
+model could be the complete second-order Taylor expansion, but this would require
+the computation of the Hessian,
+ which may be very costly. Moreover, it is very difficult 
+  to 
+ compute a global minimum of the second-order Taylor model
+subject to orthonormality constraints. Finally, there do not exist practical
+methods for computing minimizers of arbitrary
+quadratic models subject to problem constraints {\it and} trust regions. 
+
+The algorithm presented in this paper provides suitable solutions for
+  these difficulties. We show that:
+\begin{enumerate}
+\item
+ The classical fixed-point
+iteration  is the global minimization of a meaningful
+quadratic model of the energy subject to orthonormality constraints.
+Therefore the main step of our trust-region method
+coincides with the classical fixed-point iteration, and also provides a
+ useful interpretation to the first trial point at each iteration.
+\item
+Global minimizers of a simplified quadratic model subject to
+orthonormality constraints $and$ a smaller trust-region are
+easy-to-compute projections.
+Therefore, the iterations that guarantee global convergence can be computed accurately 
+in reasonable time.
+\end{enumerate}
+
+As a result we have a  trust-region algorithm for SCF electronic
+structure calculations which is globally convergent and fully implementable.
+  Moreover,
+it 
+may be considered a globalized version of the classical fixed-point
+algorithm.
+
+
+\section{The fixed-point iteration as the solution of a quadratic
+model}\label{thefixpo}
+
+ A typical iteration of a 
+trust-region method of the family introduced in \cite{trusarb} begins by
+the minimization of a quadratic model of the objective function on the
+feasible region under consideration. In this section we will show that, in the
+case of Restricted Hartree-Fock calculations, such minimization is accomplished by the
+classical fixed-point iteration.
+
+ Let us recall some classical previous definitions.   
+ Let $2 N$ and $M$ be the number of electrons and nuclei in the system,
+respectively. For all $i = 1, \ldots, M$, $\bar{r}_i \in \R^3$ denotes the
+(fixed) position of nucleus $i$ and $Z_i$ represents its charge. For all $i = 1,
+\ldots, 2N$, $r_i$ denotes the (variable) position of electron $i$. 
+
+For all $\varphi \in C^2(\R^3)$, the operator $h$ is defined by:
+\[
+ h(\varphi)(r)=-\frac{1}{2}\nabla^2 \varphi(r) - \sum_{j=1}^M \frac{Z_j}{\|r
+- \bar{r}_{j}\|}\varphi(r)
+\]
+for all $r \in \R^3, r \notin \{\bar{r}_1, \ldots \bar{r}_M\}$.
+
+Let $\{g_1, \ldots, g_K\} \subset C^2(\R^3)$ be a set of linearly independent
+functions, $K \geq N$. We assume that,
+ for all $\mu, \nu, \sigma, \lambda \in \{ 1, \ldots, K\}$, the
+following quantities are well defined:
+
+ \[
+(\mu \nu|\sigma \lambda)=\int_{\R^3}\int_{\R^3}
+g_\mu(r_1)g_\nu(r_1)\frac{1}{\|r_1 - r_2\|}g_\sigma(r_2) g_\lambda(r_2) dr_1 dr_2,
+\]
+
+\[
+H_{\mu \nu} = 
+\int_{\R^3} g_\mu(r)[h(g_\nu)(r)]dr, 
+\]
+
+\[
+S_{\mu \nu} =  \int_{\R^3} g_\mu(r)
+g_\nu(r)dr.
+\]
+
+So, $H, S \in \R^{K \times K}$.
+We  define, for all $\mu, \nu, \sigma, \lambda$, 
+\[
+ B_{\mu \nu}^{\sigma \lambda}= 2(\mu \nu|\sigma \lambda) - (\mu
+\lambda|\sigma \nu).
+\]
+
+For all $X \in \R^{K \times N}$ ($X = (X_{ij})$) we define $G(X) \in \R^{K
+\times K}$ by 
+\[  
+ G(X)_{\mu \nu} = \sum_{b=1}^{N} \sum_{\sigma,\lambda=1}^K  
+  B_{\mu \nu}^{\sigma \lambda} X_{\sigma b}X_{\lambda b}
+\mbox{  for all } \mu, \nu = 1, \ldots K.
+\] 
+
+The {\it Fock Matrix} $F(X) \in
+\R^{K \times K}$ is given by 
+\[
+F(X) = H + G(X).
+\]
+
+Finally, the 
+  {\it Energy function}
+$E(X)$ is defined by:
+\[
+E(X) = \sum_{j=1}^N X_j^T (F(X)+H) X_j.
+\]
+ 
+We consider the optimization problem
+\begin{equation} \label{nlp}
+\mbox{ Minimize  } E(X) \;\;\mbox{  subject to  } X \in \Omega \subset \R^{K \times
+N},
+\end{equation}                      
+ where $\Omega$ is the set of matrices of $K$ rows and $N$ columns
+ whose columns satisfy the weighted orthonormality
+conditions $X_i^T S X_j = \delta_{ij}$. Namely, 
+\begin{equation} \label{omega}
+\Omega = \{X \in \R^{K \times N} \;|\; X_i^T S X_j = \delta_{ij}, \;\;
+ \forall \;\; i, j \in \{1, \ldots, N\}, i \geq j\}.
+\end{equation}
+  
+ It is well known \cite{szabo,livrogordo} that for all~$X
+\in \R^{K \times N}$ and all unitary matrix $U \in \R^{N \times N}$, 
+the following invariancy property takes place:
+\begin{equation} \label{invariancia}
+ F(X U) = F(X) \mbox{  and  } 
+ E(X U) = E(X).
+\end{equation}
+
+
+Moreover, by direct calculation \cite{julianotesis} we verify that
+\begin{equation} \label{propo2}
+\frac{\partial E(X)}{\partial X_j}= 4 F(X) X_j
+\end{equation}
+for all $X \in \R^{K \times N}$.
+
+
+Suppose that $\bar{X}\in \Omega$ is the current approximation to the solution of
+(\ref{nlp}) obtained by the iterative trust-region algorithm applied
+to~(\ref{nlp}). 
+ In order to obtain an even better approximation, we
+ are going to define a {\it quadratic model}
+of $E(X)$. This quadratic model, denoted by ${\cal Q}(X)$ will be a good
+approximation of  
+ $E(X)- E(\bar{X})$ in a neighborhood of~$\bar{X}$. We define:
+\begin{equation} \label{calq}
+{\cal Q}(X) = 4 \sum_{j=1}^N (X_j - \bar{X}_j)^T F(\bar{X}) \bar{X}_j 
+         + 2 \sum_{j=1}^N   (X_j - \bar{X}_j)^T F(\bar{X})(X_j - \bar{X}_j).
+\end{equation}
+
+The first derivatives of ${\cal Q}(X)$ at $\bar{X}$ are the same as those of $E(X)$.
+The second derivatives of~$E(X)$ are hard to compute, so they are replaced in
+(\ref{calq}) by a natural simplification suggested by formula~(\ref{propo2}). 
+
+
+The SCF problem consists on finding $X = (X_1, \ldots, X_N)
+\in \Omega$, $\lambda_j \in \R, j=1,\ldots,N$ such that $\lambda_1, \ldots,
+\lambda_N$ are the $N$ smaller generalized eigenvalues of $F(X)$ and $X_1,
+\ldots, X_N$ are the corresponding eigenvectors. This means that
+\begin{equation} \label{aufbauono}
+F(X) X_j = \lambda_j S X_j \;\; \forall \; j=1,\ldots,N.
+\end{equation}
+If $X \in \Omega$ satisfies this requirement we say that $X$ is an {\it
+aufbau} Fock fixed point. If $X$ satisfies (\ref{aufbauono}) but
+$\lambda_1,\ldots,\lambda_N$ are not necessarily the~$N$ smaller eigenvalues
+we say that $X$ is a Fock fixed point. 
+
+The classical fixed-point iteration is suggested by the definition of
+{\it aufbau}
+fixed points. Given
+$\bar{X}
+\in \Omega$ one finds $\lambda_1, \ldots, \lambda_N \in \R$ and $X \equiv
+N(\bar{X})= (X_1,
+\ldots, X_N) \in \Omega$ such that $\lambda_1, \ldots,
+\lambda_N$ are the $N$ smaller generalized eigenvalues of $F(\bar{X})$ and $X_1,
+\ldots, X_N$ are the corresponding eigenvectors. 
+(So, $F(\bar{X}) X_j = \lambda_j S X_j \;\; \forall \; j=1,\ldots,N$.)
+
+Given a current iterate $\bar{X} \in \Omega$, the
+ first step of our trust-region algorithm will consist on the minimization of 
+the quadratic approximation (\ref{calq}) on the feasible set~$\Omega$. The
+main result of this section is the simple proof that this model minimization
+corresponds to  
+  a fixed-point iteration. See the discussion of~\cite{torgensen} 
+ and~\cite{livrogordo}, Section~10.9.\\
+
+\noindent
+{\bf Theorem \ref{thefixpo}.1} {\it Assume that $\bar{X} \in \Omega$ and $X =
+N(\bar{X})$ is the fixed-point iterate. Then $X$ is a global solution of 
+\begin{equation}\label{elprocua}
+\mbox{ Minimize } {\cal Q}(X) \mbox{   subject to   } X \in \Omega.\\
+\end{equation}
+
+\noindent
+Proof.} By  Theorem~1.2
+of~\cite{sw}, the fixed-point iterate $X$ solves the problem 
+\begin{equation} \label{elequivalente}
+\mbox{ Minimize } \sum_{i=1}^N 2 X_i^T F(\bar{X}) X_i \;\;\mbox{subject to}\;\; 
+   X \in \Omega.
+\end{equation} 
+
+The objective function of (\ref{elequivalente}) is quadratic and direct
+calculation shows that it 
+has the same first and  second derivatives as ${\cal Q}(X)$ at the
+current point~$\bar{X}$. 
+ Therefore, the difference between ${\cal Q}(X)$ and the objective function of
+(\ref{elequivalente}) is a constant. 
+ This implies that
+(\ref{elprocua}) and (\ref{elequivalente}) are equivalent problems. So, the
+fixed-point iterate~$X$ is a 
+solution of (\ref{elprocua}),
+as we wanted to prove. \halmos
+
+
+
+ 
+
+\section{Minimizing a quadratic model in a smaller trust region}
+
+If the trial point $X$ computed by the fixed-point iteration is such that
+$E(X)$ is sufficiently smaller than the energy at the current point~$E(\bar{X})$
+  then $X$ (or, perhaps, an
+accelerated step) will be accepted as the new iterate of the trust-region algorithm.
+If this is not the case, a quadratic model of $E(X)$ must be minimized on the
+intersection of the feasible set $\Omega$ with a suitable trust region. If the
+ energy at the 
+solution of the new subproblem is sufficiently smaller than~$E(\bar{X})$ then
+this solution (or an accelerated point) is accepted. Otherwise, the trust
+region is reduced again, and so on.
+
+Minimizing a quadratic model on the intersection of~$\Omega$ with a trust
+region might be very difficult. Fortunately, we are able to define the new
+quadratic model and the new trust region radius in such a way that this
+solution is  simple. The new quadratic model has the same first
+derivatives as the one defined by (\ref{calq}) but its second derivatives are
+different. Its definition is:
+\begin{equation} \label{calqnew}
+ {\cal Q}_{new}(X) = 4 \sum_{j=1}^N (X_j - \bar{X}_j)^T F(\bar{X}) \bar{X}_j 
+         + \frac{1}{2} \sum_{j=1}^N \bar{\sigma} (X_j - \bar{X}_j)^T S (X_j - \bar{X}_j).
+\end{equation}
+In (\ref{calqnew}), $\bar{\sigma}$ is the so called spectral coefficient, the
+effect of which is that the matrix of second derivatives of the model is a
+  simple secant approximation of the true Hessian of $E(\bar{X})$
+\cite{bmr,fletcherspectral,raydan}. However, even the minimization of
+(\ref{calqnew}) on the intersection of $\Omega$ and a given trust region can
+be difficult. For overcoming this difficulty, instead of minimizing explicitly
+the function ${\cal Q}_{new}$ restricted to the trust region, we perform this
+task in an implicit way. Namely, we minimize the sum of ${\cal Q}_{new}$ and a penalty
+term of the form 
+  $\frac{t}{2} \sum_{j=1}^N \bar{\sigma} (X_j - \bar{X}_j)^T S (X_j - \bar{X}_j)$ on the
+ feasible set~$\Omega$ {\it without} the explicit trust-region constraint.
+Fortunately, increasing $t$ has the same effect as decreasing the trust-region
+radius. The new trust-region subproblem turns out to be:
+\begin{equation} \label{elfacil}
+\mbox{ Minimize }
+  4 \sum_{j=1}^N (X_j - \bar{X}_j)^T F(\bar{X}) \bar{X}_j 
+ + \frac{1}{2} \sum_{j=1}^N  (X_j - \bar{X}_j)^T t \bar{\sigma} S  (X_j - \bar{X}_j)
+\mbox{ subject to } X \in \Omega. 
+\end{equation}
+
+The solution of this problem can be computed as follows.
+\begin{itemize}
+\item Compute
+\[
+\bar{Z} 
+= \bigg(S^{1/2} - \frac{4}{\bar{\sigma}(1+t)} S^{-1/2} F(\bar{X})\bigg) \bar{X}.
+\]
+
+\item Compute $\bar{U} \in \R^{K \times N}$ and 
+$\bar{V}  \in \R^{N \times N}$ such that
+\begin{equation} \label{reducedsvd}
+\bar{Z} = \bar{U} \Sigma \bar{V}^T
+\end{equation}
+where $\Sigma \in \R^{N \times N}$ is diagonal and and both $\bar{U}$ 
+and $\bar{V}$ have orthonormal columns.
+
+\item Compute the solution of (\ref{elfacil}) as:
+\[
+X = S^{-1/2} \bar{U} \bar{V}^T.
+\]
+
+\end{itemize}
+
+The justification to this procedure is given in Appendix~\ref{subproblems}.
+The factorization (\ref{reducedsvd}) is a reduced singular value decomposition
+(SVD) whose cost is similar to the cost of diagonalizing the $N \times N$
+matrix~$\bar{Z}^T \bar{Z}$ \cite{golubvanloan}. 
+
+
+\section{Full algorithmic description} \label{fullalgo}
+
+  The main ingredients of the new algorithm for solving (\ref{nlp}) 
+  were given in the previous
+sections. In this section we give a more precise description of our method and
+we state its theoretical convergence properties. 
+
+ \subsection{Nonlinear programming problem}
+
+    Let us express (\ref{nlp}) as a  nonlinear programming problem 
+  with vectors (instead of matrices) as unknowns.
+ Define $n = K N$. For all 
+$X \in \R^{K \times N}$, $X = (X_1,\ldots,X_N)$, 
+ we define the vector $vec(X) \in \R^{KN}$
+by 
+\[
+vec(X) = \pmatrix{X_1 \cr \cdot \cr \cdot \cr \cdot \cr
+X_N}.
+\]
+Consequently, we define $f(vec(X)) = E(X)$ and $D = \{vec(X) \in \R^n \;|\; X \in \Omega\}$. Then, the
+problem~(\ref{nlp}) can be written as                    
+\[
+\mbox{ Minimize } f(x) \;\; \mbox{subject to} \;\;  x \in D \subset \R^n.
+\]
+
+Clearly, $D$ is compact since the constraints 
+  $X_i^T S X_i = 1$ imply boundedness of $\Omega$.  Geometric
+insight on the feasible set $\Omega$ and on Newton and
+conjugate-gradient algorithms for minimization with this type of
+constraints has been given in~\cite{eas}.
+
+ It is easy to see that at  
+all the points of~$D$ the gradients of the constraints are linearly
+independent.
+ So, every local minimizer of (\ref{nlp}) satisfies the
+Lagrange optimality conditions \cite{luenberger}.  These
+conditions can be expressed as:
+
+ \begin{equation} \label{lagrange}
+\left \{
+\begin{array}{lc}
+\displaystyle\frac{\partial E(X)}{\partial X_i} -
+\sum_{j=1}^{N} \theta_{ij} S X_j &= 0 \ \mbox{ for } \ i = 1, \ldots, N, \\
+X \in \Omega &
+\end{array} \right.
+\end{equation}
+By the symmetry of $S$ we have that $\theta_{ij} = \theta_{ji}$ for all $i, j
+\in \{1, \ldots, N\}$. 
+
+  Matrices
+  $X \in \R^{K \times N}$ that satisfy the Lagrange conditions are
+called {\it stationary points} of (\ref{nlp}). 
+
+By~(\ref{propo2}), 
+ writing~$\varepsilon_{ij} = \theta_{ij}/4$ we see that the
+Lagrange conditions are:
+
+ \begin{equation} \label{lagrange2}
+ \left \{
+\begin{array}{lc}
+\displaystyle F(X) X_i -
+\sum_{j=1}^{N} \varepsilon_{ij} S X_j &= 0 \ \mbox{ for } \ i = 1, \ldots, N, \\
+X \in \Omega &
+\end{array} \right.\\
+\end{equation}
+
+Recall from Section~3 that
+ $Y = (Y_1, \ldots, Y_N) \in \R^{K \times N}$ is a {\it Fock fixed point}
+if there exist real scalars $\lambda_1, \ldots, \lambda_N$ such that:
+
+   \begin{equation} \label{lagrange3}
+ \left \{
+\begin{array}{lc}
+\displaystyle F(Y) Y_i -
+  \lambda_i  S Y_i &= 0 \ \mbox{ for } \ i = 1, \ldots, N, \\
+ Y \in \Omega &
+\end{array} \right.\\
+\end{equation}
+
+The relation between (\ref{lagrange2}) and (\ref{lagrange3}) is given in the
+following theorem.\\  
+
+\noindent
+{\bf Theorem  \ref{fullalgo}.1.} {\it Assume 
+that $X$ is a stationary point of (\ref{nlp}).
+Then, there exists a unitary matrix $V \in \R^{N \times N}$ and a set of
+multipliers $\lambda_1, \ldots, \lambda_N \in \R$  such that  
+ $Y= XV$ is a Fock fixed point.\\
+ 
+\noindent
+ Proof.} The proof is constructive. Assume that 
+$\varepsilon \equiv (\varepsilon_{ij}) \in \R^{N \times N}$ is
+ the matrix of multipliers
+associated to (\ref{lagrange2}). Since this matrix is symmetric, it can be
+decomposed as
+\[
+\varepsilon = V \Sigma V^T
+\]
+with $V$ unitary and $\Sigma$ diagonal. Straightforward calculations show that (\ref{lagrange3})
+holds with $\lambda_1, \ldots,  \lambda_N$ being the  diagonal entries of 
+of~$\Sigma$.  \halmos
+
+Theorem~\ref{fullalgo}.1 shows that, for each stationary
+  point $X$ of (\ref{nlp}) we are able to
+compute a (perhaps different) stationary point $Y \in \R^{K \times N}$
+ such that, by (\ref{invariancia}), $F(Y)=F(X)$, 
+$E(Y) = E(X)$ and $Y$ is a Fock fixed point. 
+
+
+\subsection{Nonlinear programming algorithm}
+
+  Here we define our trust-region method  
+ for solving (\ref{nlp}). 
+ The iterates of the algorithm will be called $X^k$ and the
+corresponding points  $vec(X^k) \in \R^n$ will be denoted~$x^k$. Moreover,
+given $X \in \R^{K \times N}$ we denote $x = vec(X)$.
+
+ By (\ref{propo2}), we have: 
+\[
+\nabla f(x) = vec(4 F(X) X)
+\]
+and
+\[
+g^k = vec(4 F(X^k) X^k)) \mbox{  for all  } k.
+\]
+
+
+We define  $A \in \R^{n \times n}$ and ${\cal H}_k \in \R^{n \times n}$ by
+  
+ \[
+ A =  
+\left[\begin{array}{ccc} S & & \\
+&\ddots& \\
+& &   S
+\end{array}\right], \;\;\;
+{\cal H}_k = 4 
+\left[\begin{array}{ccc} F(X^k) & & \\
+&\ddots& \\
+& &   F(X^k)
+\end{array}\right]
+\]
+
+Therefore, $A$ and ${\cal H}_k$  are 
+$N-$block-diagonal matrices with $K \times K$ blocks. \\
+
+  
+\noindent
+{\bf Algorithm \ref{fullalgo}.1}\\
+
+
+
+\noindent
+{\bf Step 1.}
+ Choose $\alpha \in (0, 1/2)$, $0 < \sigma_{min} < \sigma_{max} < \infty$ and  
+ the initial approximation  $X^0 \in \Omega$ ($x^0 = vec(X^0) \in D$).
+ Set $k \leftarrow 0$, $\sigma_0 = 1$. Choose
+\[
+type(0) \in \{1, 2\}.\\
+\]
+
+
+\noindent
+{\bf Step 2.}
+
+ If $type(k) = 1$, define $B_k = {\cal H}_k$. 
+
+If $type(k) = 2$ and $k > 0$,  compute $\sigma_k$, the spectral scaling parameter
+\cite{bmr,raydan}, by   
+
+ \[
+\sigma_k = \max \bigg\{\sigma_{min}, \min \bigg\{\sigma_{max}, 
+         \frac{(x^{k}-x^{k-1})^T (g^{k}-g^{k-1})}{ (x^{k}-x^{k-1})^T A
+(x^{k}-x^{k-1})}\bigg\} \bigg\}.
+\] 
+
+and              
+\[
+B_k =  \sigma_k  A.
+\]
+
+
+\noindent
+{\bf Step 3.} Set $t \leftarrow 0$.\\
+
+
+\noindent
+{\bf Step 4.}  
+  Define
+\[
+Q_{k, t}(x) =   (g^k)^T (x - x^k) + \frac{1}{2} (x -
+x^k)^T [B_k + t \sigma_k A] (x - x^k).
+\] 
+
+  Compute $x_{trial}$,  a global solution of
+
+\begin{equation} \label{thesubproblem3}
+\mbox{ Minimize } Q_{k,t}(x)
+\;\;\mbox{subject to}\;\; x  \in D. 
+\end{equation}
+
+
+ 
+ If $Q_{k, t}(x_{trial})=0$ terminate the execution
+of the algorithm declaring that $x^k$ ($X^k$) is stationary.\\
+
+\noindent
+{\bf Step 5.}
+
+\begin{itemize}
+
+\item If 
+\begin{equation} \label{tercerarmijo}
+f(x_{trial}  ) \leq f(x^k) + \alpha Q_{k,0}( x_{trial} )
+\end{equation}
+compute $x^{k+1} \in D$ such that  
+\begin{equation} \label{aindamenor}
+f(x^{k+1}) \leq f(x_{trial})  ,
+\end{equation} 
+set $k \leftarrow k+1$, choose 
+\[
+type(k)\in \{1, 2\}
+\]
+ and go to
+Step~2.    \\
+
+\item If (\ref{tercerarmijo}) does not hold, then, 
+\begin{enumerate}
+
+\item If $type(k) = 1$ set $type(k+1) = 2$,  $x^{k+1} =
+x^k$, $k \leftarrow k+1$ and go to Step~2.
+
+\item If $type(k) = 2$, 
+  set 
+  $t \leftarrow \max\{1,  2 t\}$ 
+   and go to Step~4. \halmos
+ 
+\end{enumerate}
+
+\end{itemize}
+
+ Iterations of type~1 ($type(k)=1$) are identified with the resolution of the
+quadratic model described in Section~3. On the other hand, if the iteration is
+of type~2, the quadratic model solved is the simple one described in
+Section~4. However, the algorithm has the necessary freedom to choose the
+simpler quadratic model even when the iteration is of type~1. The fact that
+the trust region is reduced when the sufficient descent condition
+(\ref{tercerarmijo}) fails is represented by the fact that after such a
+failure we necessarily solve a subproblem of type~2. 
+ Observe that, in (\ref{aindamenor}), the choice of $x^{k+1}$ could be 
+$x^{k+1} = x_{trial}$. However, in the formulation (\ref{aindamenor}) we are
+free to choose an iterate $x^{k+1}$ that can be even better than the trial
+point~$x_{trial}$. This feature prepares the algorithm to incorporate
+acceleration schemes such as DIIS in practical implementations. The
+convergence proofs are not affected at all by the specific choice of
+$x^{k+1}$, provided that the condition (\ref{aindamenor}) is satisfied.  
+ In Appendix~B we prove that Algorithm~\ref{fullalgo}.1 is globally convergent without
+any additional assumption on the generated sequence $\{X^k\}$. This means
+that:
+
+\begin{enumerate}
+
+\item The algorithm terminates at an iteration $k$ only if $X^k$ is a
+stationary point. (Therefore, a set of~$N$ generalized eigenvectors can
+be immediately obtained from $X^k$.) 
+
+\item The iterations of Algorithm~\ref{fullalgo}.1 are well defined in the
+sense that each iteration necessarily finishes in finite time 
+   if $X^k$ is not stationary.
+
+\item Any sequence  generated by Algorithm~\ref{fullalgo}.1 
+ necessarily admits accumulation points and  
+ all the accumulation
+points are stationary. Therefore, approximate Fock fixed points
+  can be obtained up to any desired precision. 
+
+\end{enumerate}
+
+\section{Numerical experiments}\label{numexp}
+
+The (unaccelerated) TR method is given by Algorithm~5.1 with the choice 
+$ x^{k+1} = x_{trial} $
+in (\ref{aindamenor}). In the accelerated version of the algorithm we take
+advantage of the freedom implicit in (\ref{aindamenor}) and we
+choose~$x^{k+1}$ as an accelerated step that uses the previous iterates to
+ improve $x_{trial}$ minimizing a residual approximation on an
+appropriate subspace. In other words, we incorporate the DIIS acceleration
+scheme to the basic structure of TR. The resulting algorithm will be called
+TR+DIIS. As stated in Section~\ref{fullalgo}  and proved in 
+Appendix~\ref{trusar}, the
+theoretical convergence properties of TR and TR+DIIS are the same. In both
+cases accumulation points are (not necessarily {\it aufbau}) Fock fixed points and
+the tendency to converge to {\it aufbau} points comes from the fact that the first
+step of each iteration is the classical fixed-point step. 
+
+In TR+DIIS the acceleration is used from the second iteration on. Therefore,
+the first extrapolation uses two residuals. In the subsequent iterations the
+number of interpolating residuals is increased up to a maximum of 10. From
+then on, 10 residuals are used. Moreover, residuals that correspond to points
+where energy increases are discarded for extrapolation purposes.
+
+The classical fixed-point method will be called FP and its acceleration using
+DIIS (with the same number of residuals as TR+DIIS) will be called, simply,
+DIIS.
+
+ We used different types of initial points:
+ diagonalized core
+Hamiltonians $H$,  Huckel guesses  provided by the GAMESS \cite{gamess} package for
+the same problem and (in some cases) the initial approximation induced by the
+Identity matrix is employed. These different
+initial approximations were chosen because they can be easily reproduced.
+
+We used, for our tests,  molecules
+with the geometries specified in Table \ref{geometry}. The molecules CrC
+and Cr$_2$  are known as having unstable convergence
+properties \cite{daniels00,cances00,kudin02}. Two CO geometries were
+chosen as examples since it is known that distorted geometries
+cause convergence difficulties \cite{livrogordo}. Finally, water and
+amonia examples were introduced to illustrate how the trust-region 
+algorithm behaves in situations where the classical algorithms are successful.
+
+
+\subsection{Results}
+
+  Table \ref{examples} shows that the number of
+iterations performed by FP and TR  on one side, and by DIIS and TR+DIIS on the other side 
+are the same for the water and amonia examples. This is due to
+the fact that both the fixed-point iterations and the DIIS
+extrapolations are always successful in providing new trial points with
+a significantly lower energy. In that case, the reduction of the
+trust region is never needed and therefore the trust-region algorithms
+behave exactly as the supporting methods. 
+
+For the CO molecule with a STO-3G basis 
+the classical FP method always fails to
+converge. The energy  oscillates until the maximum number of
+iterations (5001) is achieved. For this example the DIIS method is very
+efficient, converging from any initial point in at most~11
+iterations. The TR method also converges in all cases, as expected, but
+it takes almost twice the number of iterations as DIIS and
+converges to a solution that does not satisfy the {\it aufbau} principle
+when the initial point was derived from the Identity matrix. Finally, the accelerated
+TR+DIIS method converges rapidly and with a few less iterations than 
+DIIS, always to solutions that satisfy the {\it aufbau}
+principle. In the distorted CO
+molecule the robustness of the trust-region algorithms becomes  better
+illustrated: The FP method fails to converge in all cases. The DIIS
+method converges in 117 iterations to a point higher in energy than the
+solution found in 12 and 10 iterations by the TR and TR+DIIS methods
+respectively 
+when a STO-3G basis is used from a core Hamiltonian initial
+approximation. Using the Huckel approximation,  DIIS converges
+to the lowest energy solution, but it takes 85 iterations against 13 and
+15 iterations taken by TR and TR+DIIS respectively. Finally,
+when using a larger 6-31G basis, DIIS converges fast but to
+points higher in energy than the ones obtained by the trust-region algorithms.  
+ We observe that the TR method takes 384 iterations to converge from the Huckel initial 
+ approximation 
+  because  its  basic first-trial step is the
+classical fixed-point iteration which systematically fails for this
+problem.
+
+For the Cr$_2$ molecule the DIIS method was more successful than the
+trust-region methods. We obtained convergence of all the instances,
+ but the 
+FP method converged to a point that lies $9.3$ a.u. higher in energy than
+the solution found by the DIIS method. The differences in energy for the
+other solutions are of the order of $5 \times 10^{-6}$ a.u. In these
+cases, the DIIS method converged in at most 37 iterations
+whereas 398 and 134 iterations were needed to achieve convergence for the
+TR and TR+DIIS methods respectively from the Huckel guess.
+
+Finally, a very interesting test was provided by the CrC molecule. For
+the 6-31G basis, all but the FP methods converged. DIIS  used
+fewer iterations when starting from the core Hamiltonian but more
+iterations than  TR+DIIS when starting from the Huckel guess.
+The pure TR method employed significantly more iterations than both methods
+in all cases, and converged to a solution slightly higher in energy.
+
+When using the STO-3G basis, the tests were more interesting and the
+results are highlighted in Figure \ref{example}. Starting from the core
+Hamiltonian both FP and DIIS failed to converge, as can be seen in
+Figure \ref{example}(a). The TR method
+converged in 71 iterations to a higher-energy solution that does not
+satisfy the {\it aufbau} principle and the TR+DIIS method
+converged in 29 iterations to the lowest energy {\it aufbau} solution.
+From the Huckel guess  DIIS  converged but not as fast as 
+TR+DIIS whereas TR  converged in significantly more
+iterations. See Figure \ref{example}(b). 
+Finally, from the Identity guess, DIIS oscillates at the beginning
+and stops oscillating 
+ probably thanks to numerical
+ rounding errors. DIIS finally converges in 180 iterations, as shown in
+Figure \ref{example}(c). TR converges in 40 iterations to a
+solution higher in energy and TR+DIIS method converges to the lowest
+energy solution in 36 iterations. This is an interesting example where 
+the DIIS method fails to converge from one initial point
+while trust-region methods are successful.
+
+ It is worthwhile to highlight that the FP
+method fails to converge in 12 of 19 tests whereas the pure TR method
+converged in all cases in spite of the fact that the first trial point computed
+ at each iteration is  identical to
+the fixed-point iteration. This fact illustrates
+the robustness of the trust-region strategy. 
+
+
+We note that for each iteration of the trust-region methods,
+more than one functional evaluation is needed when it is necessary to reduce
+the trust region. For this reason, in critical cases
+ a small number of iterations of the
+trust-region method  does not
+necessarily reflects a small computer time. However, since increasingly efficient
+linear-scaling procedures are continuously being developed for building Fock-matrices,
+reliability issues become more and more important \cite{kudin02,goedecker99}.
+We claim that trust-region
+methods as the ones introduced here could be used as an automatic alternative
+to provide convergence for difficult problems when divergence or oscillatory
+behaviors are detected in other algorithms. 
+
+
+\section{Conclusions}
+
+We introduced a new algorithm for performing Closed Shell Restricted
+Hartree-Fock electronic structure calculations. Global 
+convergence was proved without any assumption on the sequence of
+iterates, thus showing that convergence must take place from any
+initial point. The method is also independent of any user-specified
+parameter. The  trust-region method so far introduced uses the
+structure of the RHF problem to define the first trial point at each iteration.
+  We showed that
+to find this trial point is equivalent to perform
+ the classical fixed-point iteration since  this
+iteration may be interpreted as the global minimization of a quadratic
+aproximation of the energy. The resolution of the subproblems associated
+with the reduction of the trust region are easy-to-compute projections. Due to
+these algorithmic features, the trust-region method is implementable. 
+ Numerical experiments show that
+the method is indeed very robust. Convergence is obtained in all the examples
+in spite of the fact that the naive fixed-point iteration is used as the first
+step of the trust-region iteration.
+The new method may be very useful
+when convergence failures of other algorithms are detected thus providing 
+reliability for routine RHF calculations. This is a very important 
+feature when one deals with  systems
+with complex wave-functions.
+
+The main ideas of trust-region methods are very general and may 
+  be adapted to different SCF methods such as the Unrestricted
+Hartree-Fock, Configuration Interaction or Density Functional
+Theory based methods \cite{kohn96,livrogordo}.   
+The detailed study of such methods in view of the definition of
+TR strategies for each case is a very interesting area of research that
+could lead to new and robust algorithms.  
+
+ From the theoretical and mathematical point of view it should be interesting
+to study the convergence properties of the related trust-region method
+introduced in~\cite{torgensen}. 
+
+
+\section{Acknowledgements}
+JBF and JMM were supported by PRONEX-Optimization 76.79.1008-00, FAPESP (Grant
+01-04597-4) and CNPq. LM was supported by FAPESP and by the Programa 
+de Bolsas para Instrutores Graduados of the State University of
+Campinas. We also thank Luciano N. Vidal for providing the subroutine
+used for computing molecular integrals that is a key part of the package
+with which numerical tests were performed.
+
+\section{Appendices} \appendix
+\section{Notation}
+\begin{enumerate}
+\item
+$\R^n$: the Euclidian $n$-dimensional space;
+\item
+$\R^{K \times N}$: the set of real matrices with $K$ rows and $N$ columns.
+\item 
+The columns of a  matrix $X \in \R^{K \times N}$  will be denoted
+$X_j$. So, $X = (X_1, \ldots, X_N)$. The entries of the matrix will be denoted
+$X_{ij}$.
+
+\item
+$\R_{++} = \{t \in \R \;|\; t > 0\}$;
+\item
+$\N = \{0, 1, 2, \ldots \}$;
+\item
+If $f$ is a real-valued function of $n$ variables, we denote
+$g(x)=\nabla f(x)$ and $g^k = g(x^k)$ for $x \in \R^n$, $x^k \in \R^n$. 
+\item
+$C^2(\R^3)$: the set of twice continuously differentiable functions $\varphi:
+\R^3 \to \R$.
+\item
+If $r \in \R^3$, 
+ we denote $d r = dx dy dz, \; dr_1 = dx_1  dy_1 dz_1, 
+dr_2 = dx_2 dy_2 dz_2$.
+
+\item
+The transpose of a real matrix $A$ will be denoted $A^T$. The Identity matrix
+will be denoted $I$. The Frobenius norm of~$A$ is denoted~$\|A\|_F$.  
+\item
+A square matrix $C$
+will be said {\it unitary} if $C^T C = C C^T  = I$.
+\item
+$\delta_{ij}$ denotes the Kroenecker symbol. ($\delta_{ij} = 1$ if $i = j$,
+$0$ otherwise.)
+
+\item If $X = (X_1, \ldots, X_N) \in \R^{K \times N}$ and  $j \in \{1, \ldots, N\}$,
+ we define:
+
+ \[
+ \frac{\partial E(X)}{\partial
+X_j}= \left[
+\begin{array}{c}
+\frac{\partial E(X)}{\partial X_{1j}} \\
+\frac{\partial E(X)}{\partial X_{2j}} \\
+\vdots \\
+\frac{\partial E(X)}{\partial X_{Kj}}.
+\end{array}
+\right].
+\]
+ 
+\end{enumerate}
+ 
+
+\section{Global convergence results} \label{trusar}
+
+In this Appendix we give a rigorous proof that Algorithm~\ref{fullalgo}.1 is
+globally convergent. We strongly rely on the theory developed
+in~\cite{trusarb}. As in \cite{trusarb}, the optimization problem to which 
+the trust-region algorithm applies will be quite general. We will define
+Algorithms~\ref{trusar}.1 and \ref{trusar}.2. Algorithm~\ref{trusar}.1 is,
+essentially, the trust-region Algorithm~2.1 of \cite{trusarb} with slight
+differences that favor its application to our problem.
+Algorithm~\ref{trusar}.2 is a Levenberg-Marquardt \cite{cgtbook} modification
+of Algorithm~\ref{trusar}.1. In the Levenberg-Marquardt regularization
+approach  the trust-region constraint is replaced by a penalty term added to the
+objective function of the subproblem. In this way, trust-region subproblems
+become easily solvable. Finally, we will see that Algorithm~\ref{fullalgo}.1
+is a particular case of Algorithm~\ref{trusar}.2.
+
+\subsection{General assumptions on the problem}
+ 
+ Consider the problem
+\begin{equation} \label{theproblem}
+\mbox{ Minimize } f(x) \;\; \mbox{subject to} \;\;  x \in D,
+\end{equation}
+where $f : \R^n \to \R$.  Assume that $D$ is closed, $f$ is differentiable and 
+\[
+ \| \nabla f(y) - \nabla f(x) \|_2 \leq L \|y - x \|_2
+\]
+for all $x, y $ belonging to  
+open and convex set that contains $D$. 
+
+ The feasible set $D$ is defined by a finite set of smooth algebraic equations
+and inequations. We assume that 
+  all the points of $D$ are {\it regular}, which means that the
+gradients of the  active constraints are
+linearly independent at every feasible point.
+  Under this condition (see \cite{luenberger}, page
+314) every
+local minimizer of (\ref{theproblem}) satisfies the Karush-Kuhn-Tucker
+(KKT) optimality conditions. Points in $D$ that satisfy KKT said to be 
+ {\it stationary}.    
+ 
+\subsection{Trust-region algorithm}
+
+
+
+Let $\| \cdot \|_A$ denote an arbitrary norm on $\R^n$. Let $\alpha \in
+(0, 1/2)$, $M > 0$, $B_k$ symmetric and 
+\[
+\|B_k\|_2 \leq M \;\; \forall \;\; k \in \N.\\
+\]
+
+For all $k \in \N$, let  $\{\Delta_{k,\ell}\}_{\ell \in \N} \subset
+\R_{++}$ be such that 
+\[
+\lim_{\ell \to \infty} \Delta_{k, \ell} = 0.
+\]
+
+(Neither the matrices $B_k$ nor the sequences of trust-region radius 
+$\{\Delta_{k,\ell}\}_{\ell \in \N}$ need to be computed in advance, but
+only at the steps of the algorithm where they are used.)\\
+
+
+
+The algorithm described below is, essentially, Algorithm~2.1 of
+\cite{trusarb} with a more liberal choice of the trust-region radius 
+$\Delta_{k, \ell}$ and a stricter resolution of quadratic subproblems.\\ 
+
+ 
+ \noindent
+{\bf Algorithm \ref{trusar}.1} \\
+
+
+\noindent
+{\bf Step 1.} Choose $x_0 \in D$ and set $k \leftarrow 0$.\\ 
+
+\noindent
+{\bf Step 2.} Set $\ell \leftarrow 0$. \\
+
+\noindent
+{\bf Step 3.}
+  Compute a global solution $\ov{s}_k(\De)$ of 
+\begin{equation} \label{mainsub}
+\left.\begin{array}{lcc}
+{\rm Minimize} & \psi_k (s) \equiv & \frac{1}{2} s^T B_k  s + g^T_k s \\
+s.t.           & x^k + s \in D, & \\
+               & \|s\|_A \leq \De & 
+\end{array}\right\} ,
+\end{equation} 
+ If $\psi_k (\ov{s}_k (\De)) = 0$, terminate the
+execution of the algorithm. \\
+
+\noindent
+{\bf Step 4.} 
+  If
+\begin{equation} \label{armijoa}
+f(x^k + \ov{s}_k (\De)) \leq f(x^k) + \alpha \psi_k (\ov{s}_k (\De)),
+\end{equation}
+ define 
+\[
+s_k = \ov{s}_k (\De),\;  \Delta_k = \De,\;
+acc(k) = \ell,
+\]
+compute $x^{k+1} \in D$ such that
+ \begin{equation} \label{aindamenor2}
+f(x^{k+1}) \leq f(x^k + s_k),
+\end{equation}
+set $k \leftarrow k+1$ and go to Step~2.
+
+If (\ref{armijoa}) does not hold,
+ set $\ell \leftarrow \ell+1$ and go to Step~3. \halmos
+
+\noindent
+{\bf Remarks.} In Algorithm~2.1 of \cite{trusarb} the subproblems
+(\ref{mainsub}) do not need to be solved accurately. Instead, each subproblem
+resolution is preceded by the minimization of a simple majorizing quadratic of
+the form $Q_k(s) = (1/2)M \|s\|_2^2 + g_k^T s$ and, after that, a trial point
+such that $\psi_k (\ov{s}_k (\De)) \leq  Q_k (s^Q_k (\De))$ is taken. Of
+course, if the trial increment is a global solution of (\ref{mainsub}), the
+requirements of Algorithm~2.1 of \cite{trusarb} are also satisfied.
+
+Observe that the condition (\ref{aindamenor2}) has the same meaning and
+interpretation as the condition (\ref{aindamenor}) in
+Algorithm~\ref{fullalgo}.1.\\
+
+
+
+
+The global convergence theory of a minimization algorithm usually involves two
+steps. Firstly, one proves that the algorithm is {\it well defined}. This means
+that, unless the current point is stationary (generally, a solution) an
+iteration necessarily finishes in finite time obtaining a new iterate. The
+second step consists in showing that all the limit points of the sequence
+generated by the algorithm are stationary points and, of course, that such
+limit points exist. In this way, it can be guaranteed that stationary points
+are necessarily found up to any desired precision. Recall that, in our case,
+stationary points coincide with Fock fixed points.\\ 
+ 
+Since Algorithm \ref{trusar}.1 is based on Algorithm~2.1 of \cite{trusarb}, 
+  the following results are true.\\
+ 
+\noindent
+{\bf Theorem \ref{trusar}.1.} {\it If Algorithm~\ref{trusar}.1
+terminates at Step~3, then $x^k$ is stationary.}\\
+
+\noindent
+{\it Proof.} See Theorem~2.2 of \cite{trusarb}. \halmos
+
+\noindent
+{\bf Theorem \ref{trusar}.2.} {\it If $x^k$ is not a stationary point of
+(\ref{theproblem}), then (\ref{armijoa}) holds for $\ell$ large enough,
+and, so, $x^{k+1}$ is well defined.}\\
+
+ \noindent
+{\it Proof.} See Theorem~2.3 of \cite{trusarb}. \halmos
+
+For proving global convergence of Algorithm~\ref{trusar}.1 we need an
+additional assumption. Assumption~A says that the
+sequences $\{\Delta_{k,\ell}\}_{\ell \in \N}$ should not converge to $0$
+too fast. As a consequence, a ``very small'' accepted trust-region radius 
+ is necessarily preceded by a small trust-region
+radius for which (\ref{armijoa}) was not satisfied at the same iteration. \\
+
+\noindent
+{\bf Assumption A.} {\it If $K \subset \N$ is an infinite sequence of
+indices such that
+\[
+\lim_{k \in K} x^k = x_*
+\]
+and
+\[
+\lim_{k \in K} \Delta_k = 0,
+\]
+then, either $x_*$ is a stationary point of (\ref{theproblem}) or
+\[
+\lim_{k \in K} \Delta_{k, acc(k)-1} = 0.\\
+\]
+}
+
+In Algorithm~2.1 of \cite{trusarb} Assumption A is guaranteed taking 
+\begin{equation} \label{deltamin}
+\Delta_{k, 0} \geq \Delta_{min} > 0
+\end{equation}
+and
+\begin{equation} \label{sigmasigma}
+\Delta_{k, \ell+1} \in [\underline{\tau} \Delta_{k, \ell},
+\overline{\tau}
+\Delta_{k, \ell}] \; \; \forall \;\; \ell \in \N,
+\end{equation}
+for all $k \in \N$, where $\Delta_{min} > 0$ and $0 < \underline{\tau} <
+\overline{\tau} < 1$.\\
+
+\noindent
+{\bf Theorem \ref{trusar}.3.} {\it Assume that Assumption~A holds.
+  Let $\{x^k\}$ be a sequence generated
+by Algorithm~\ref{trusar}.1 and let $x_*$ be an accumulation point.
+Then, $x_*$ is stationary.}\\
+
+\noindent
+{\it Proof.} All the arguments in the proof of Theorem~3.2 
+of~\cite{trusarb} 
+ hold replacing the requirements~(\ref{deltamin})--(\ref{sigmasigma}) by
+Assumption~A. \halmos
+
+
+
+
+
+\subsection{Levenberg-Marquardt-like algorithm}  \label{model}
+
+ The Levenberg-Marquardt (LM) or regularization approach is often used to
+enhance convergence properties of unconstrained (and some constrained) 
+ minimization algorithms based on
+sufficient decrease of the objective function. The connections of 
+ regularization approaches with trust-region ones are well known.
+ See \cite{cgtbook} and references therein. Briefly speaking, regularization
+parameters are the Lagrange multipliers of 
+trust-region subproblems. In this section we define 
+LM-like algorithms associated with the trust-region methods of
+Section~\ref{trusar}, we prove that they have similar global convergence
+properties and we introduce the LM version of the trust-region method.\\
+
+ Let 
+$\alpha \in (0, 1/2)$,  $ 0 < \sigma_{min} < \sigma_{max} < \infty$, 
+    $ 1 < \tau_{min} < \tau_{max} < \infty$, 
+$A \in \R^{n
+\times n}$ symmetric and positive definite.  Define
+\[
+{\cal B} = \{B \in \R^{n \times n} \;|\; B = B^T, \; \|B\|_2 \leq M\}. \\
+\]
+
+\noindent
+{\bf Algorithm \ref{trusar}.2}\\
+
+\noindent
+{\bf Step 1.} Choose $x_0 \in D$ and set $k \leftarrow 0$. \\
+
+\noindent
+{\bf Step 2.} Choose $B_k \in {\cal B}$, $\sigma_k \in [\sigma_{min},
+\sigma_{max}]$.   Set $\ell \leftarrow 0$, $t_{k,0}=0$.                              \\
+
+\noindent
+{\bf Step 3.} 
+Define, for all $s  \in \R^n$, 
+\begin{equation} \label{defQ}
+Q_{k,\ell}(s) = (g^k)^T s + \frac{1}{2} s^T (B_k +  t_{k,\ell} \sigma_k A) s.\\
+\end{equation}
+
+\noindent
+{\bf Step 4.} Compute   $\widehat{s}(t_{k,\ell})$, a global solution of 
+\begin{equation} \label{thesubproblem}
+\mbox{ Minimize } Q_{k,\ell}(s) \;\;\mbox{subject to}\;\; x^k + s \in D.
+\end{equation}
+
+ If $Q_{k, \ell}(\widehat{s}(t_{k,\ell}))=0$ terminate the execution
+of the algorithm.\\
+
+\noindent
+{\bf Step 5.}
+
+If 
+\begin{equation} \label{primerarmijo}
+f(x^k + \widehat{s}(t_{k,\ell})  ) \leq f(x^k) + \alpha Q_{k,0}( \widehat{s}(t_{k,\ell}) )
+\end{equation}
+set  $acc(k) = \ell$,  $t_k = t_{k,\ell}$,
+compute $x^{k+1} \in D$ such that
+\begin{equation} \label{aindamenor3}
+ f(x^{k+1}) \leq f( x^k + \widehat{s}(t_{k,\ell}))  ,
+\end{equation}
+set 
+ $k \leftarrow k+1$ and go to
+Step~2.                                                            \\
+
+If (\ref{primerarmijo}) does not hold, then, 
+  if $\ell=0$ take $t_{k,\ell+1}>0$. If $\ell > 0$, take
+ $t_{k, \ell+1} \in [\tau_{min} t_{k,\ell}, \tau_{max} t_{k,\ell}]$.
+ Set $\ell \leftarrow
+  \ell + 1$ and go to Step~3. \halmos
+
+ 
+From now on, we define
+\[
+\|z\|_A = \sqrt{z^T A z} \;\; \forall \;\; z \in \R^n.\\
+\]
+ 
+The relation between the LM-like iteration defined by
+Algorithm~\ref{trusar}.2 and a trust-region iteration is given
+by the following Proposition.\\
+
+  
+ \noindent
+{\bf Proposition \ref{trusar}.1}. {\it Assume that $ \widehat{s}(t_{k,\ell})   $
+is a solution of (\ref{thesubproblem}) and $s_{trust}$ is a solution of 
+
+
+ \begin{equation} \label{trustsubproblem}
+\left.\begin{array}{lcc}
+{\rm Minimize} & Q_{k,0} (s)  &  \\
+s.t.           & x^k + s \in D, & \\
+               & \|s\|_A \leq \| \widehat{s}(t_{k,\ell})  \|_A & 
+\end{array}\right\} .
+\end{equation}
+
+
+Then, $s_{trust}$ is a global solution of (\ref{thesubproblem}) and 
+$ \widehat{s}(t_{k,\ell}) $ is a global solution of (\ref{trustsubproblem}).\\
+
+\noindent
+Proof.} For $\ell = 0$ the proof is trivial. Suppose that $\ell > 0$. 
+Since $s_{trust}$ is a minimizer of (\ref{trustsubproblem}) and
+$ \widehat{s}(t_{k,\ell})    $ is a feasible point of (\ref{trustsubproblem}) we 
+ have that
+\begin{equation} \label{viernes1}
+      Q_{k,0}(s_{trust}) \leq Q_{k, 0}( \widehat{s}(t_{k,\ell})    ).
+\end{equation}
+But, since $\|s_{trust}\|_A \leq \| \widehat{s}(t_{k,\ell})    \|_A$,  
+\begin{equation} \label{viernes2}
+ \frac{t_{k,\ell}}{2} s_{trust}^T \sigma_k A s_{trust}  \leq 
+  \frac{t_{k,\ell}}{2}  \widehat{s}(t_{k,\ell}) ^T \sigma_k A \widehat{s}(t_{k,\ell}) ,
+\end{equation}
+Adding (\ref{viernes1}) and~(\ref{viernes2}), we get:
+\[
+Q_{k, \ell} (s_{trust}) = 
+       Q_{k,0}(s_{trust})+
+  \frac{t_{k,\ell}}{2} s_{trust}^T \sigma_k A s_{trust}  
+\leq 
+   Q_{k, 0}(\widehat{s}(t_{k,\ell}) ) + 
+   \frac{t_{k,\ell}}{2}  \widehat{s}(t_{k,\ell}) ^T \sigma_k A \widehat{s}(t_{k,\ell})    = 
+  Q_{k, \ell}( \widehat{s}(t_{k,\ell})   ).
+\]
+So, $s_{trust}$ is a global solution of (\ref{thesubproblem}). For the  
+second part of the thesis, note that, if  
+ $ \widehat{s}(t_{k,\ell}) $ is not a global solution of (\ref{trustsubproblem}) we
+have that 
+ \begin{equation} \label{viernes3}
+      Q_{k,0}(s_{trust}) < Q_{k, 0}(\widehat{s}(t_{k,\ell})   ).
+\end{equation}
+So, adding (\ref{viernes2}) and (\ref{viernes3}), 
+\[
+Q_{k,\ell}(s_{trust}) < Q_{k,\ell}(  \widehat{s}(t_{k,\ell}) ).
+\]
+That is, $ \widehat{s}(t_{k,\ell})   $ would not be a global solution of
+(\ref{thesubproblem}). This completes the proof. \halmos
+
+
+By Proposition \ref{trusar}.1, defining
+\begin{equation} \label{deltakl}
+\Delta_{k, \ell} = \| \widehat{s}(t_{k, \ell}) \|_A
+\end{equation}
+and
+\[
+\psi_k(s) = Q_{k, 0}(s) \;\; \forall \;\; s \in \R^n,
+\]
+Algorithm \ref{trusar}.2 has exactly the same form as
+Algorithm~\ref{trusar}.1. For proving that it has the same global
+convergence properties it remains to prove that $\Delta_{k, \ell}$
+defined by (\ref{deltakl}) is such that, for fixed $k$, $\Delta_{k,
+\ell}$ tends to $\infty$ if $\ell$ tends to infinity and that
+Assumption~A holds. This is done in the following two lemmas.\\
+
+\noindent
+{\bf Lemma \ref{trusar}.1.} {\it Assume that, at some iteration $k$ of
+Algorithm~\ref{trusar}.2, $\ell$ tends to infinity and $\Delta_{k,
+\ell}$ is defined by (\ref{deltakl}). Then,
+\[
+\lim_{\ell \to \infty} \Delta_{k, \ell} = 0.\\
+\]
+
+\noindent
+Proof.} Since $\tau_{min} > 1$, the fact that $\ell$ tends to infinity
+implies that $t_{k, \ell}$ tends to infinity too.
+  
+Since $Q_{k, \ell} (0) = 0$ and $\widehat{s}(t_{k, \ell})$
+is a global minimizer of $Q_{k, \ell}(s)$ we have that 
+\[
+Q_{k,\ell}(\widehat{s}(t_{k, \ell})) \leq 0 \;\; \forall \;\;
+\ell.
+\]
+So, 
+\[ 
+  (g^k)^T \widehat{s}(t_{k, \ell}) +
+ \frac{1}{2} \widehat{s}(t_{k, \ell})^T (B_k +  t_{k,\ell} \sigma_k A) 
+ \widehat{s}(t_{k, \ell}) \leq 0.
+\]
+Therefore, 
+\[ 
+ \frac{  t_{k,\ell} \sigma_k}{2} \widehat{s}(t_{k, \ell})^T  A 
+ \widehat{s}(t_{k, \ell})  \leq 
+  - (g^k)^T \widehat{s}(t_{k, \ell}) -
+ \frac{1}{2} \widehat{s}(t_{k, \ell})^T  B_k  
+ \widehat{s}(t_{k, \ell})
+\leq \|g(x^k)\|_2  \|\widehat{s}(t_{k, \ell})\|_2 + \frac{M}{2} 
+   \| \widehat{s}(t_{k, \ell}) \|_2^2.
+\]
+Since $D$ is bounded, the right-hand side of this inequality is bounded
+independently of $\ell$. But, since $t_{k, \ell} \to \infty$ and
+$\sigma_{min} \leq \sigma_k \leq \sigma_{max}$, we have that 
+ \[
+\lim_{\ell \to \infty}  \widehat{s}(t_{k, \ell})^T  A 
+\widehat{s}(t_{k, \ell}) = 0.
+\]
+So, $\lim_{\ell \to \infty} \Delta_{k, \ell} = 0$ as we wanted to prove.
+\halmos
+
+
+ \noindent
+{\bf Lemma \ref{trusar}.2.} {\it Assume that $\{x^k\}$ is an infinite
+sequence generated by Algorithm~\ref{trusar}.2 and 
+ $\Delta_{k,
+\ell}$ is defined by (\ref{deltakl}). Then, Assumption A holds.\\
+
+\noindent
+Proof.} Let $K_1$ be an infinite subset of $\N$ such that 
+\[
+\lim_{k \in K_1} x^k = x_*
+\]
+and
+\[
+\lim_{k \in K_1} \Delta_k = \lim_{k \in K_1} \Delta_{k, acc(k)} = 0.
+\]
+  We consider two possibilities:
+
+\begin{enumerate}
+
+\item There exists an infinite subset $K_2 \subset K_1$ such that 
+      $t_k \equiv t_{k, acc(k)}$ is bounded. 
+
+\item $\lim_{k \in K_1} t_k = \infty$.
+
+\end{enumerate}
+
+
+ Assume first that $\{t_k\}_{k \in K_1}$ is bounded. Then, there exists
+$K_3$, an infinite subsequence of $K_2$, such that 
+\[
+\lim_{k \in K_3} B_k + \sigma_k t_k A = B + \sigma t A = \ov{B}.
+\]
+
+ Let $s \in \R^n$ be such that $x_* + s \in D$. Then, for all $k \in
+K_3$ we have that
+\[
+(g^k)^T \widehat{s}(t_k) + \frac{1}{2}   \widehat{s}(t_k)^T (B_k + t_k
+\sigma_k A) 
+  \widehat{s}(t_k)
+ \leq 
+(g^k)^T (x_* + s - x^k) + \frac{1}{2} (x_* + s - x^k)^T (B_k + t_k
+\sigma_k A) (x_* + s - x^k).
+\]
+So, taking limits for $k \in K_3$ and using that 
+\[
+\lim_{k \in K_3} \| \widehat{s}(t_k)\|_A = \lim_{k \in K_3} \Delta_k =
+0,
+\]
+we obtain:
+\[
+g(x_*)^T s + \frac{1}{2} s^T \ov{B} s \geq 0
+\]
+for all $s \in \R^n$ such that $x_* + s \in D$. Therefore, $0 \in \R^n$
+is a minimizer of $g(x_*)^T s + \frac{1}{2} s^T \ov{B} s$ subject to 
+$x_* + s \in D$. Since $x_*$ is regular, the KKT conditions for this
+problem hold and, since these KKT conditions are the same as the KKT
+conditions of (\ref{theproblem}), $x_*$ is stationary. 
+
+  Now, assume that $\lim_{k \in K_1} t_k = \infty$. 
+  Since $t_k \leq \tau_{max} t_{k, acc(k)-1}$ we have that 
+\[
+\lim_{k \in K_1} t_{k,   acc(k)-1} = \infty.
+\]
+
+
+
+
+
+  
+Since $Q_{k, t_{k,    acc(k)-1}} (0) = 0$ and $\widehat{s}(t_{k,    acc(k)-1})$
+is a global minimizer of $Q_{k, t_{k,    acc(k)-1}}(s)$ we have that 
+\[
+Q_{k,    acc(k)-1  }(\widehat{s}(t_{k,     acc(k)-1})) \leq 0 \;\; \forall \;\;
+ k \in K_1.
+\]
+So, 
+\[ 
+  (g^k)^T \widehat{s}(t_{k,    acc(k)-1}) +
+ \frac{1}{2} \widehat{s}(t_{k,    acc(k)-1})^T (B_k +  t_{k,   acc(k)-1} \sigma_k A) 
+ \widehat{s}(t_{k,    acc(k)-1}) \leq 0 \;\; \forall \;\; k \in K_1.
+\]
+Therefore, for all $k \in K_1$, 
+\[ 
+ \frac{  t_{k,    acc(k)-1} \sigma_k}{2} \widehat{s}(t_{k,    acc(k)-1})^T  A 
+ \widehat{s}(t_{k,    acc(k)-1}) 
+ \leq 
+  - (g^k)^T \widehat{s}(t_{k,    acc(k)-1}) -
+ \frac{1}{2} \widehat{s}(t_{k,    acc(k)-1})^T  B_k  
+ \widehat{s}(t_{k,    acc(k)-1})
+\]
+\[
+\leq \|g(x^k)\|_2  \|\widehat{s}(t_{k,    acc(k)-1})\|_2 + \frac{M}{2} 
+   \| \widehat{s}(t_{k,    acc(k)-1}) \|_2^2.
+\]
+Since $D$ is bounded, the right-hand side of this inequality is bounded
+ too. But, since $t_{k,    acc(k)-1} \to \infty$ and
+$\sigma_{min} \leq \sigma_k \leq \sigma_{max}$, we have that 
+ \[
+\lim_{k \in K_1}  \widehat{s}(t_{k,    acc(k)-1})^T  A 
+\widehat{s}(t_{k,    acc(k)-1}) = 0.
+\]
+So, $\lim_{k \in K_1} \Delta_{k,    acc(k)-1} = 0$ as we wanted to prove.
+\halmos
+       
+
+
+ We proved that Algorithm~\ref{trusar}.2 is a particular case of
+Algorithm~\ref{trusar}.1 and that Assumption~A is satisfied.  Therefore,
+by Theorem~\ref{trusar}.2, the following global convergence theorem also
+holds.\\
+ 
+ 
+ \noindent
+{\bf Theorem \ref{trusar}.3.} {\it 
+
+\begin{enumerate}
+
+\item If Algorithm~\ref{trusar}.2
+terminates at Step~4, then $x^k$ is a stationary point of
+(\ref{theproblem}). 
+
+\item  If $x^k$ is not a stationary point of
+(\ref{theproblem}), then (\ref{primerarmijo}) holds for $\ell$ large enough,
+and, so, $x^{k+1}$ is well defined.
+
+\item 
+  Let $\{x^k\}$ be a sequence generated
+by Algorithm~\ref{trusar}.2. Then, $\{x^k\}$ admits at least one
+accumulation point and every accumulation point is 
+ stationary.
+
+\end{enumerate}
+} 
+ 
+
+ So far, we defined a globally convergent method for solving nonlinear
+programming problems~(\ref{theproblem}) such that all the iterates are feasible
+points ($x^k \in D$) and $f(x^{k+1}) < f(x^k)$ for all $k$.
+Algorithm~\ref{trusar}.2 tends to be more easily implementable than
+Algorithm~2.1 of~\cite{trusarb} because in the latter the feasible set of
+the subproblems is the intersection of $D$ with a trust-region ball
+whereas in Algorithm~\ref{trusar}.2 the feasible region of the
+subproblems is~$D$. However, in many general nonlinear programming
+problems, even subproblem~(\ref{thesubproblem}) can be very difficult
+(perhaps, as difficult as the original problem). In our case,   
+ with the appropriate definition of $B_k$,
+subproblems (\ref{thesubproblem}) are easy and, so, the
+LM-like algorithm becomes attractive.
+
+Algorithm \ref{fullalgo}.1 shares the same theoretical properties of 
+Algorithm~\ref{trusar}.2, as stated in the following theorem.\\
+  
+\noindent
+{\bf Theorem \ref{trusar}.4.} {\it 
+
+\begin{enumerate}
+
+\item If Algorithm~\ref{fullalgo}.1
+terminates at Step~4, then $x^k$ is a stationary point of
+(\ref{nlp}).
+
+\item  If $x^k$ is not a stationary point of
+(\ref{nlp}) and $type(k)=2$, 
+  then (\ref{tercerarmijo}) holds for $t$ large enough,
+and, so, $x^{k+1}$ is well defined.
+
+\item 
+  Let $\{x^k\}$ be a sequence generated
+by Algorithm~\ref{fullalgo}.1. Then, $\{x^k\}$ admits at least one
+accumulation point and every accumulation point is 
+ stationary.
+
+\end{enumerate}
+} 
+ 
+\noindent
+{\it Proof.} Delete the iterations of type~1 for which
+(\ref{tercerarmijo}) failed to be satisfied and relabel the iterates.
+The resulting algorithm is a particular case of Algorithm~\ref{trusar}.2.
+Then, the thesis follows from Theorem~\ref{trusar}.3. \halmos
+
+
+
+
+\section{Resolution of the easy subproblems} \label{subproblems}
+
+
+In this Appendix we explain why the subproblems described in Section~4 are
+ computationally simple. 
+We analyze the solution of (\ref{thesubproblem3}) with $type(k)=2$.
+Let $\rho = 1 + t$.  Then, the  
+ ``easy'' subproblem (\ref{thesubproblem3}) is equivalent to:
+\[
+\mbox{ Minimize } \frac{2}{ \sigma_k \rho} (g^k)^T (x - x^k) + (x - x^k)^T
+A (x - x^k)   \;\; \mbox{ subject to } \;\; x \in D.
+\]
+
+
+We perform the following change of variables in $\R^{n}$:
+\[
+y = A^{1/2} x.
+\]
+Consequently,
+\[
+x = A^{-1/2}y, \;  y_k = A^{1/2} x^k, \;  x^k = A^{-1/2} y_k.
+\]
+Moreover, writing
+\[
+Y_i = S^{1/2} X_i \; \forall \; i = 1, \ldots, N, 
+\]
+we also have:
+ \[
+Y_i^k = S^{1/2} X_i^k \; \forall \; i = 1, \ldots, N.
+\]
+Let us write:
+\[
+y =  \pmatrix{Y_1 \cr \cdot \cr \cdot \cr \cdot \cr Y_N} \in \R^{KN}, \;  
+y_k =  \pmatrix{Y_1^k \cr \cdot \cr \cdot \cr \cdot \cr Y_N^k}\in
+\R^{KN},  
+\]
+\[
+Y = (Y_1, \ldots, Y_N) \in \R^{K \times N}, 
+ Y_k = (Y_1^k, \ldots, Y_N^k) \in \R^{K \times N}.
+\]
+So, the easy subproblem becomes:
+ \[
+\mbox{ Minimize } \frac{2}{\sigma_k \rho} (g^k)^T A^{-1/2}(y - y_k) + \|y -
+y_k\|^2_2
+  \;\; \mbox{ subject to } \;\; Y^T Y = I_N.
+\]
+
+Calling 
+\[
+\bar{g}_k =  \frac{1}{\sigma_k \rho} A^{-1/2} g^k,
+\]
+the easy subproblem is equivalent to
+  \[
+\mbox{ Minimize } 2 \bar{g}_k^T (y - y_k) + \|y -
+y_k\|^2_2
+  \;\; \mbox{ subject to } \;\; Y^T Y = I_N.
+\]
+
+This is equivalent to
+   \[
+\mbox{ Minimize }  \|y -
+(y_k - \bar{g}_k)\|^2_2
+  \;\; \mbox{ subject to } \;\; Y^T Y = I_N.
+\]
+Let us write
+\[
+z_k = y_k - \bar{g}_k =   \pmatrix{Z_1^k \cr \cdot \cr \cdot \cr \cdot
+\cr Z_N^k} \in \R^{KN}
+\]
+and
+\[
+\bar{Z} = (Z_1^k, \ldots, Z_N^k) \in \R^{K \times N}.
+\]
+ Then the easy subproblem is:
+ \begin{equation} \label{easyy}
+\mbox{ Minimize }  \|Y - \bar{Z}\|^2_F
+  \;\; \mbox{ subject to } \;\; Y^T Y = I_N,
+\end{equation}
+where $\| \cdot \|_F$ denotes the Frobenius norm. 
+
+Assume that 
+\[
+\bar{Z} = U \Sigma V^T
+\]
+is the SVD decomposition of $\bar{Z}$. Therefore, 
+$U \in \R^{K \times K}$ and $V \in \R^{N \times N}$ are unitary and 
+$\Sigma \in \R^{K \times N}$ is diagonal. Since $\|Q_1 A \|_F = \|A Q_2\|_F =
+ \|A\|_F$ whenever $Q_1$ and $Q_2$ are unitary, the easy problem is
+equivalent to
+\[
+\mbox{ Minimize }  \|U^T Y V - \Sigma\|^2_F
+  \;\; \mbox{ subject to } \;\; Y^T Y = I_N,
+\]
+
+Write $W = U^T Y V$. The statements 
+$  Y^T Y = I_N$ and $W^T W = I_N$ are clearly equivalent, therefore the
+solution of the problem above is $Y = U W V^T$, where $W$ solves
+ \[
+\mbox{ Minimize }  \|W - \Sigma\|^2_F
+  \;\; \mbox{ subject to } \;\; W^T W = I_N.
+\]
+A solution of this problem is the diagonal matrix $W \in \R^{K \times
+N}$ that has $1$'s on its diagonal. We will call $I_{K \times N}$ this
+matrix for now on. So, the solution $Y$ of (\ref{easyy}) is:
+\[
+Y = U I_{K \times N} V^T.
+\]
+Therefore, writing $U = (U_1, \ldots, U_K)$, $V = (V_1,\ldots,V_N)$ we have that
+\[
+Y = U_1 V_1^T + \ldots + U_N V_N^T.
+\]
+Finally, the solution of the easy subproblem is 
+\[
+X = S^{-1/2} Y.
+\]
+
+
+
+\begin{thebibliography}{unsrt} 
+
+\bibitem{szabo} A. Szabo and S. N. Ostlund. 
+``Modern Quantum Chemistry: Introduction to Advanced
+Eletronic Structure Theory''. Dover Publications. New York, 1989.
+
+\bibitem{kohn96}
+W. Kohn, A. D. Becke and R. G. Parr, 
+J. Phys. Chem. {\bf 100}, 12974 (1996).
+
+\bibitem{pulay82}
+P. Pulay, J. Comput. Chem. {\bf 3}, 556 (1982).
+
+\bibitem{daniels00}
+A. D. Daniels and G. E. Scuseria, 
+Phys. Chem. Chem. Phys. {\bf 2}, 2173 (2000).
+
+\bibitem{gamess}
+M. W. Schmidt, et al.,
+J. Comput. Chem. {\bf 14}, 1347 (1993).
+
+\bibitem{gaussian}
+M. J. Frisch, et. al., Gaussian 03, Gaussian, Inc., Pittsburgh PA, 2003.
+
+\bibitem{pulay80}
+P. Pulay, Chem. Phys. Lett. {\bf 180}, 461 (1991).
+
+\bibitem{seeger76}
+R. Seeger and J. Pople, J. Chem. Phys.
+{\bf 65}, 265 (1976).
+
+
+\bibitem{vacek99}
+G. Vacek, J. K. Perry and J.-M. Langlois, 
+Chem. Phys. Lett. {\bf 310}, 189 (1999).
+
+\bibitem{rabuck99}
+A. D. Rabuck and G. E. Scuseria,
+J. Chem. Phys. {bf 110}, 695 (1999).
+
+\bibitem{fournier90}
+R. Fournier, J. Andzelm, A. Goursot, N. Russo and D. R. Salahub,
+J. Chem. Phys. {\bf 93}, 2919 (1990).
+
+\bibitem{saunders73}
+V. R. Saunders and I. H. Hillier, 
+Int. J. Quantum Chem. {\bf  7}, 699 (1973).
+
+\bibitem{livrogordo}
+T. Helgaker, P. Jorgensen and J. Olsen,
+``Molecular Electronic-Structure Theory''
+John Wiley \& Sons Inc. New York, NY 2000.
+
+\bibitem{bacskay81}
+G. B. Bacskay, Chem. Phys. {\bf 61}, 385 (1981).
+
+\bibitem{cances00}
+E. Canc\`es and C. Le Bris, Int. J. Quantum Chem.
+{\bf 79}, 82 (2000).
+
+\bibitem{cancesproof}
+E. Canc\`es and C. Le Bris, ESAIM-Math. Model. Num.
+{\bf 34}, 749 (2000).
+
+\bibitem{kudin02}
+K. N. Kudin, G. E. Scuseria and E. Canc\`es,
+J. Chem. Phys. {\bf 116}, 8255 (2002).
+
+ \bibitem{torgensen} L. Torgensen, J. Olsen, D. Yeager, P. Jorgensen, P. Salek
+and T. Helgaker,   
+ J. Chem. Phys. {\bf 121}, 16 (2004).
+
+\bibitem{powell} M. J. D. Powell, Math. Program. {\bf 29}, 3 (1984).
+
+ 
+
+\bibitem{cgtbook} A. R. Conn, N. I. M. Gould and Ph. L. Toint, {\it
+Trust-region methods}. MPS-SIAM Series on Optimization, SIAM,
+Philadelphia, 2000.
+
+\bibitem{trusarb}  J. M. Mart\'{\i}nez and S. A. Santos,
+Math. Program. {\bf 68}, 267 (1995). 
+ 
+\bibitem{julianotesis} J. B. Francisco, {\it Restoration algorithms in
+nonlinear programming}, Doctoral Thesis, Institute of Mathematics,
+University of Campinas, 2004. 
+
+\bibitem{sw} A. H. Sameh and J. A. Wisniewski, 
+SIAM J. Numer. Anal. {\bf 19}, 1243 (1982).
+
+\bibitem{bmr} E. G. Birgin, J. M. Mart\'{\i}nez and M. Raydan,
+SIAM J. Optimiz. {\bf 10}, 1196 (2000).
+
+\bibitem{fletcherspectral} R. Fletcher,  On the Barzilai-Borwein
+  method, {\it Department of Mathematics, University of Dundee}
+  NA/207, Dundee, Scotland, 2001.
+
+\bibitem{raydan} M. Raydan,  
+SIAM J. Optimiz. {\bf 7}, 26 (1997).
+
+\bibitem{golubvanloan} G. H. Golub and Ch. F. Van Loan, {\it Matrix
+Computations}. The Johns Hopkins University Press, Baltimore, 1996.
+  
+\bibitem{eas} A. Edelman, T. A. Arias and S. T. Smith, 
+SIAM J. Matrix Anal. A. {\bf 20}, 303 (1998).
+ 
+\bibitem{luenberger} D. Luenberger, ``Linear and nonlinear
+programming''. Addison-Wesley, Massachussets and California, 1984.
+
+\bibitem{goedecker99}
+S. Goedecker, Rev. Mod. Phys. {\bf 71}, 1085 (1999).
+ 
+
+\end{thebibliography}
+
+\newpage
+\begin{table}
+\centering
+\begin{tabular}{lccc}
+\hline
+         & \multicolumn{3}{c}{Geometry} \\ \cline{2-4}
+Molecule & Bond length / \AA & Angle & Dihedral \\
+\hline
+CrC      & 2.00 & & \\
+Cr$_2$   & 2.00 & & \\
+CO       & 1.40 & & \\
+CO(Dist) & 2.80 & & \\
+H$_2$O   & 0.95(OH) & $109^\circ$(HOH) & \\
+NH$_3$   & 1.008(NH)& $109^\circ$(HNH) & $120^\circ$(HNHH) \\
+\hline
+\end{tabular}
+\caption{Geometry parameters of the molecules used in the examples.}
+\label{geometry}
+\end{table}
+  
+\begin{table}
+\centering
+\begin{tabular}{lllcccc}
+\hline
+ & & & \multicolumn{4}{c}{Algorithm} \\ \cline{4-7}
+Molecule & Basis  & Initial point &   FP    &    DIIS   &    TR    & TR+DIIS     \\
+\hline
+H$_2$O   & STO-3G & H$^{core}$    &     7   &     5     &   7        &   5       \\
+         & 6-31G  & H$^{core}$    &    18   &     8     &  18        &   8       \\
+NH$_3$   & STO-3G & H$^{core}$    &     8   &     7     &   8        &   7       \\
+         & 6-31G  & H$^{core}$    &    14   &     7     &  14        &   7       \\
+CO       & STO-3G & H$^{core}$    &   X$^a$ &    11     & 22         &  10       \\
+         &        & Huckel        &   X$^a$ &     7     & 16         &   7       \\
+         &        & Identity      &   X$^a$ &    11     & 17$^{b,c}$ &   9       \\
+CO(Dist) & STO-3G & H$^{core}$    &   X$^a$ &   117$^c$ & 12         &  10       \\
+         &        & Huckel        &   X$^a$ &    85     & 13         &  15       \\
+         & 6-31G  & H$^{core}$    &   X$^a$ &    27$^c$ & 158        & 115       \\
+         &        & Huckel        &   X$^a$ &    36$^c$ & 384        &  59       \\
+Cr$_2$   & STO-3G & H$^{core}$    &   52$^c$&    13     & 56         &  38       \\ 
+         &        & Huckel        &   12$^c$&    33$^c$ & 398        & 134       \\
+         &        & Identity      &   7$^c$ &    37     & 50$^c$     &  26$^c$   \\
+CrC      & STO-3G & H$^{core}$    &   X$^a$ &    X$^a$  & 71$^{b,c}$ &  29       \\
+         &        & Huckel        &   X$^a$ &    49     &  129       &  23       \\
+         &        & Identity      &   X$^a$ &    180    & 40$^c$     &  36       \\
+         & 6-31G  & H$^{core}$    &   X$^a$ &    19     & 102$^c$    &  29$^c$   \\
+         &        & Huckel        &   X$^a$ &    52$^c$ & 113$^c$    &  37       \\
+\multicolumn{7}{l}{\small$^a$No convergence in 5001 iterations.} \\
+\multicolumn{7}{l}{\small$^b$Converged to a point with Aufbau principle violation.} \\
+\multicolumn{7}{l}{\small$^c$Converged to a higher energy than some of
+the other algorithms.} \\
+\hline
+\end{tabular}
+\caption{Number of iterations performed by each algorithm in some
+test problems. FP: Classical fixed-point algorithm; DIIS: The DIIS 
+acceleration of Pulay; TR: The new trust-region algorithm without acceleration; 
+TR+DIIS: The new trust-region algorithm accelerated by DIIS.}
+\label{examples}
+\end{table}
+ 
+ 
+  
+
+ 
+\begin{figure}[htbp]
+\centering 
+\includegraphics*[scale=1.5,angle=0]{./example.jpg}
+\caption{
+Convergence behavior of the four methods for the CrC molecule using the
+STO-3G basis. 
+}
+\label{example}
+\end{figure} 
+ 
+
+\end{document}
+
+
+  
+  

@@ -1,0 +1,39 @@
+! TESTE com Água distorcida
+ $CONTRL 
+        SCFTYP=RHF 
+        RUNTYP=ENERGY 
+        COORD=UNIQUE 
+        NZVAR=0 
+        MAXIT=100 
+ $END
+ $SYSTEM 
+        TIMLIM=2 
+        MEMORY=100000 
+ $END
+ $STATPT 
+        OPTTOL=1.0E-5  
+ $END
+ $BASIS  
+        GBASIS=STO 
+        NGAUSS=2 
+ $END
+ $GUESS  
+        GUESS=HUCKEL 
+ $END
+ $SCF 
+        EXTRAP=.FALSE.
+        DAMP=.FALSE.
+        SHIFT=.FALSE.
+        RSTRCT=.FALSE.
+        DIIS=.TRUE.
+        SOSCF=.FALSE.
+        DEM=.FALSE.
+        ETHRSH = 10.d0
+        SOGTOL = 1.d-10 
+ $END
+ $DATA
+CrC...distorted geometry base: STO-2G
+C1
+ H  1.   0.000000     0.000000     0.000000
+ H  1.   0.000000     0.000000     1.008000
+$END

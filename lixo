@@ -1,0 +1,18 @@
+a - main.o
+a - initial.o
+a - getinp.o
+a - readxyz.o
+a - readbase.o
+a - integrals.o
+a - fixpoint.o
+a - auxiliar.o
+a - fmm-simple.o
+a - fixpoint-acc.o
+a - diis.o
+libtinker.a(diis.o): In function `mult_':
+diis.o(.text+0xc88): multiple definition of `mult_'
+libtinker.a(auxiliar.o)(.text+0x10e0): first defined here
+libtinker.a(diis.o): In function `diis_':
+diis.o(.text+0xb4): undefined reference to `pmatirx_'
+diis.o(.text+0x2e7): undefined reference to `weight_'
+collect2: ld returned 1 exit status

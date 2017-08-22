@@ -1,4 +1,3 @@
-
       SUBROUTINE integral
 C*********************************************************
 C Compute all required molecular integrals for Cartesian               
